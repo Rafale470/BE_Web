@@ -1,0 +1,17 @@
+import mysql.connector
+from flask import session
+from myApp.config import DB_SERVER, COLOR
+import hashlib
+from . import bddGen
+
+def verifAuthData(login, password):
+    cnx = bddGen.connexion()
+    password = hashlib.sha256(password.encode())
+    passwordC = password.hexdigest()
+    if cnx is None:
+        return None
+    cursor = cnx.cursor(dictionary=True)
+    sql = "SELECT * FROM Users WHERE username = %s AND password = %s LIMIT 1"
+    cursor.execute(sql, [login, passwordC])
+    res = cursor.fetchall()
+    return ((len(res) == 1), res[0]["privilege"])

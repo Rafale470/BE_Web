@@ -19,9 +19,8 @@ def view2(app) :
         mail = request.form['mail']
         motPasse = motPasse.hexdigest() 
         lastId = add_membreData(identifiant, motPasse, nom, prenom, mail)
-        print("dans addmembre")
         return redirect("/index")
-
+#oui
     @app.route("/test")
     def test():
         return render_template("index.html.jinja")

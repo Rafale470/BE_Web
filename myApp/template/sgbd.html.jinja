@@ -1,0 +1,42 @@
+{# liste #}
+<head>
+    <link rel="stylesheet" href="../static/css/main.css" />
+  </head>
+  {% include("header.html.jinja") %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Supp</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Mail</th>
+            <th>Login</th>
+            <th>Statut</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% if liste and liste is not none %}
+        {% for user in liste %}
+        <tr>
+            <td>
+                <a href="/suppMembre/{{user.idUser}}">
+                <i class='fa-solid fa-trash-can text-danger'></i>
+                </a>
+            </td>
+            <td>{{ user.nom }}</td>
+            <td>{{ user.prenom }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.username }}</td>
+            <td>
+                {% if user.privilege == 'admin' %}
+                Administrateur
+                {% else %}
+                Utilisateur
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+</table>

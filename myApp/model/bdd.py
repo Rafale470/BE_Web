@@ -14,5 +14,10 @@ def verifAuthData(login, password):
     sql = "SELECT * FROM Users WHERE username = %s AND password = %s LIMIT 1"
     cursor.execute(sql, [login, passwordC])
     res = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    # On vérifie si on a trouvé un utilisateur
+    # On renvoie un booléen et l'utilisateur s'il existe
+
     success = (len(res) == 1)
     return (success, res[0] if success else None)

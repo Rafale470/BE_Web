@@ -24,24 +24,8 @@ def add_membreData(identifiant, motpasse , nom , prenom, mail):
 
 def get_membresData():
     cnx = bddGen.connexion()
-    if cnx is None:
-        return None
-    try:
-        cursor = cnx.cursor(dictionary=True)
-        sql = "SELECT * FROM identification"
-        cursor.execute(sql)
-        listeMembres = cursor.fetchall()
-        bddGen.close_bd(cursor, cnx)
-        #session['successDB'] = "OK get_membresData"
-    except mysql.connector.Error as err:
-        listeMembres = None
-        session['errorDB'] = "Failed get membres data : {}".format(err)
-    return listeMembres
-
-def get_membresData():
-    cnx = bddGen.connexion()
     if cnx is None: return None
-    sql = " SELECT * FROM identification"
+    sql = " SELECT * FROM Users"
     param = None
     msg = {
         "success":"OKmembres",
@@ -54,7 +38,7 @@ def get_membresData():
 def del_membreData(idUser):
     cnx = bddGen.connexion()
     if cnx is None: return None
-    sql = "DELETE FROM membres WHERE idUser=%s;"
+    sql = "DELETE FROM Users WHERE user_id=%s;"
     param = (idUser,)
     msg = {
     "success":"suppMembreOK",
@@ -62,8 +46,6 @@ def del_membreData(idUser):
     }
     bddGen.deleteData(cnx, sql, param, msg)
     cnx.close()
-
-    
 
 
 

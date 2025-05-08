@@ -22,7 +22,7 @@ WEB_SERVER = {
 #Configuration du serveur de BDD
 
 DB_SERVER = {
-    "user": "root",
+    "user": "root1",
     "password": "mysql",
     "host": "localhost",
     "port": 3306, #8889 si MAC

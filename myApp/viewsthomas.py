@@ -15,18 +15,19 @@ def view2(app) :
         nom = request.form['nom']
         prenom = request.form['prenom']
         mail = request.form['mail']
-        motPasse = motPasse.hexdigest() 
+        motPasse = motPasse.hexdigest()
+        print("motPasse", motPasse)
         lastId = add_membreData(identifiant, motPasse, nom, prenom, mail)
         print("dans addmembre")
         return redirect("/index")
 
     @app.route("/test")
     def test():
-        return render_template("index.html")
+        return render_template("index.html.jinja")
     
     @app.route("/gestion_users")
     def gestion_users():
-        return render_template("gestion_users.html")
+        return render_template("gestion_users.html.jinja")
     
     # @app.route("/gestion_users", methods=['POST'])
     # def fichiersUpload():

@@ -20,3 +20,16 @@ def verifAuthData(login, password):
     # On renvoie un booléen et l'utilisateur s'il existe
     success = (len(res) == 1)
     return (success, res[0] if success else None)
+
+def exist(login):
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return None
+    cursor = cnx.cursor(dictionary=True)
+    sql = "SELECT username FROM Users WHERE username = %s"
+    cursor.execute(sql, [login])
+    res = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    success = (len(res) == 1)
+    return (success)

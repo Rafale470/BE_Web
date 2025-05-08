@@ -63,5 +63,6 @@ def Ma_page():
 @app.route("/logout")
 def logoutfonction():
        session.clear()
-       return redirect(url_for("index"))
+       session["infoBleu"]="Déconnexion réussie"
+       return redirect(url_for('index'))
 

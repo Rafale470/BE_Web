@@ -5,14 +5,22 @@ from .model.bddthomas import get_membresData
 from .model.bddthomas import del_membreData
 from werkzeug.utils import secure_filename
 import pandas, os
+from .controller.function import messageInfo
+from .model.bdd import exist 
 UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__))+'/files/'
 
 def view2(app) :
     @app.route("/register", methods=['POST'])
     def register():
         if request.form['password'] != request.form['password2'] :
-            return redirect("/register")
+            session["infoRouge"] = "Les deux mots de passe doivent être identiques"
+            params = messageInfo()
+            return render_template("creation_compte.html.jinja", **params)
         identifiant = request.form['identifiant']
+        if exist(identifiant):
+            session["infoRouge"] = "Un compte avec cet identifiant existe déjà"
+            params = messageInfo()
+            return render_template("creation_compte.html.jinja", **params)
         motPasse =hashlib.sha256(request.form['password'].encode())
         nom = request.form['nom']
         prenom = request.form['prenom']

@@ -27,14 +27,17 @@ def view2(app) :
 
     @app.route("/sgbd")
     def sgbd():
-        listeMembres = get_membresData()
-        params ={
-        'liste':listeMembres
-        }
-        #params = f.messageInfo(params)
-        return render_template("sgbd.html.jinja", **params)
+        if session.get("privilege") == "admin" :
+            listeMembres = get_membresData()
+            params ={
+            'liste':listeMembres
+            }
+            #params = f.messageInfo(params)
+            return render_template("sgbd.html.jinja", **params)
+        else : 
+            return redirect("/index")
     
-    @app.route("/suppMembre/<idUser>")
+    @app.route("/suppMembre/<user_id>")
     def suppMembre(idUser=""):
         del_membreData(idUser)
         if "errorDB" not in session:

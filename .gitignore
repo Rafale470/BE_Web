@@ -1,3 +1,12 @@
 __pycache__/
 __init__.py
 /*.pyc
+*.pyo
+.vscode/
+myApp/__pycache__/config.cpython-312.pyc
+myApp/__pycache__/config.cpython-313.pyc
+myApp/__pycache__/views.cpython-312.pyc
+myApp/__pycache__/views.cpython-313.pyc
+myApp/__pycache__/viewsthomas.cpython-312.pyc
+myApp/__pycache__/viewsthomas.cpython-313.pyc
+myApp/controller/__pycache__/function.cpython-313.pyc

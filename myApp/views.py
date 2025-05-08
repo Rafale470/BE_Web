@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for, request, flash
+from flask import Flask, render_template, session, redirect, url_for, request, flash, abort
 from .model.bdd import verifAuthData
 from .controller.function import messageInfo
 
@@ -28,7 +28,6 @@ def propos():
 @app.route('/login', methods=['POST']) 
 def login():
 
-
        username = request.form['username']  
        password = request.form['password']  
        success, user = verifAuthData(username, password)
@@ -55,9 +54,15 @@ def ccfonction():
 
 @app.route("/Ma_page")
 def Ma_page():
-       params = messageInfo()
-       return render_template("Ma_page.html.jinja", **params)
+       if session.get("logged") :
+              params = messageInfo()
+              return render_template("Ma_page.html.jinja", **params)
+       else :
+              params = messageInfo()
+              return redirect(url_for("login"))
+
 @app.route("/logout")
 def logoutfonction():
        session.clear()
        return redirect(url_for("index"))
+

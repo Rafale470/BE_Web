@@ -38,8 +38,8 @@ def view2(app) :
             return redirect("/index")
     
     @app.route("/suppMembre/<user_id>")
-    def suppMembre(idUser=""):
-        del_membreData(idUser)
+    def suppMembre(user_id=""):
+        del_membreData(user_id)
         if "errorDB" not in session:
             session["infoVert"]="L'utilisateur a bien été supprimé"
         else:

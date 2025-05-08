@@ -20,7 +20,7 @@ def view2(app) :
         motPasse = motPasse.hexdigest() 
         lastId = add_membreData(identifiant, motPasse, nom, prenom, mail)
         return redirect("/index")
-#oui
+
     @app.route("/test")
     def test():
         return render_template("index.html.jinja")

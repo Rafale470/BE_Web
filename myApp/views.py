@@ -31,7 +31,6 @@ def login():
        username = request.form['username']  
        password = request.form['password']  
        success, user = verifAuthData(username, password)
-       user['password'] = ''
 
        if success :
               session["infoVert"]="Authentification réussie"

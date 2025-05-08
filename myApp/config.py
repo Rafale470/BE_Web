@@ -15,8 +15,8 @@ COLOR ={
 #Configuration du serveur web
 
 WEB_SERVER = {
-    "host": "10.3.110.2",
-    "port":8081,
+    "host": "localhost",
+    "port":8000,
 }
 
 #Configuration du serveur de BDD

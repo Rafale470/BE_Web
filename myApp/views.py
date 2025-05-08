@@ -1,5 +1,6 @@
-from flask import Flask, render_template, session, redirect, url_for, request
+from flask import Flask, render_template, session, redirect, url_for, request, flash
 from .model.bdd import verifAuthData
+from .controller.function import messageInfo
 
 
 from .viewsthomas import view2
@@ -13,7 +14,8 @@ app.config.from_object('myApp.config')
 
 @app.route("/")
 def index():
-       return render_template("index.html")
+       params = messageInfo()
+       return render_template("index.html", **params)
 
 @app.route("/index")
 def ind():
@@ -29,23 +31,19 @@ def login():
 
        username = request.form['username']  
        password = request.form['password']  
-       user = verifAuthData(username, password)
+       #success, user = verifAuthData(username, password)
+       success = True
+       user = {"user_id" : 1, "username" : "test", "password" : "532eaabd9574880dbf76b9b8cc00832c20a6ec113d682299550d7a6e0f345e25", "nom":"aaa","prenom":"bbb","email":"aaa@gmaol.com","privilege":"user"}
 
-       print(f"Username: {username}, Password: {password}, Work : {user}")
-       try:
-              # Authentification réussie
-              session["idUser"] = user["idUser"]
-              session["nom"] = user["nom"]
-              session["prenom"] = user["prenom"]
-              session["mail"] = user["mail"]
-              session["statut"] = user["statut"]
-              session["avatar"] = user["avatar"]
+       if success :
               session["infoVert"]="Authentification réussie"
-              return redirect("/")
-       except TypeError as err:
-              # Authentification refusée
-              session["infoRouge"]="Authentification refusée"
-              return redirect("/login")
+              session.update(user)
+              return redirect(url_for('index'))
+       else :
+              session["infoRouge"] = "Erreur authentification"
+              params = messageInfo()
+              return render_template("login.html", **params)
+
 
 @app.route("/login")
 def loginfonction():
@@ -54,3 +52,8 @@ def loginfonction():
 @app.route("/register")
 def ccfonction():
        return render_template("creation_compte.html")
+
+@app.route("/Ma_page")
+def Ma_page():
+       params = messageInfo()
+       return render_template("Ma_page.html", **params)

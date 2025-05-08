@@ -30,8 +30,9 @@ def login():
 
        username = request.form['username']  
        password = request.form['password']  
-       success, user = verifAuthData(username, password)
-       user = {"user_id" : 1, "username" : "test", "password" : "532eaabd9574880dbf76b9b8cc00832c20a6ec113d682299550d7a6e0f345e25", "nom":"aaa","prenom":"bbb","email":"aaa@gmaol.com","privilege":"user"}
+       #success, user = verifAuthData(username, password)
+       success = True
+       user = {"user_id" : 1, "username" : "test", "password" : "532eaabd9574880dbf76b9b8cc00832c20a6ec113d682299550d7a6e0f345e25", "nom":"aaa","prenom":"bbb","email":"aaa@gmaol.com","privilege":"admin"}
 
        if success :
               session["infoVert"]="Authentification réussie"

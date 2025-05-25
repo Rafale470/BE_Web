@@ -1,27 +1,70 @@
-{# filepath: h:\BEweb\BE_Web\myApp\template\search.html.jinja #}
 {% extends "base.html.jinja" %}
 
 {% block content %}
   <h2>Recherche CELLAR par thème Eurovoc</h2>
   <form method="get" action="{{ url_for('search_cellar') }}">
-    <label for="query">Thème Eurovoc :</label>
-    <input type="text" id="query" name="query" value="{{ query|default('') }}" required>
+    <label for="eurovoc">Thème Eurovoc :</label>
+    <input type="text" id="eurovoc" name="eurovoc" autocomplete="off" required>
+    <input type="hidden" id="eurovoc_uri" name="eurovoc_uri">
+    <div id="suggestions" style="border:1px solid #ccc; display:none; position:absolute; background:white; z-index:10;"></div>
     <button type="submit">Rechercher</button>
   </form>
 
-  {% if results is defined %}
-    <h3>Résultats pour "{{ query }}" :</h3>
-    {% if results %}
+  {% if works is defined %}
+    <h3>Textes associés au thème sélectionné :</h3>
+    {% if works %}
       <ul>
-        {% for uri, label in results.items() %}
+        {% for work in works %}
           <li>
-            <strong>{{ label }}</strong><br>
-            <small>{{ uri }}</small>
+            <a href="{{ work.psi }}" target="_blank">{{ work.title }}</a>
+            {% if work.date %} ({{ work.date }}){% endif %}
           </li>
         {% endfor %}
       </ul>
     {% else %}
-      <p>Aucun résultat trouvé.</p>
+      <p>Aucun texte trouvé pour ce thème.</p>
     {% endif %}
   {% endif %}
+
+  <script>
+    const input = document.getElementById('eurovoc');
+    const suggestions = document.getElementById('suggestions');
+    const hiddenUri = document.getElementById('eurovoc_uri');
+
+    input.addEventListener('input', function() {
+      const q = input.value;
+      if (q.length < 2) {
+        suggestions.style.display = 'none';
+        return;
+      }
+      fetch('/ajax/eurovoc_suggest?q=' + encodeURIComponent(q))
+        .then(r => r.json())
+        .then(data => {
+          suggestions.innerHTML = '';
+          if (data.length === 0) {
+            suggestions.style.display = 'none';
+            return;
+          }
+          data.forEach(item => {
+            const div = document.createElement('div');
+            div.textContent = item.label;
+            div.style.cursor = 'pointer';
+            div.onclick = () => {
+              input.value = item.label;
+              hiddenUri.value = item.uri;
+              suggestions.style.display = 'none';
+            };
+            suggestions.appendChild(div);
+          });
+          suggestions.style.display = 'block';
+        });
+    });
+
+    // Cacher les suggestions si on clique ailleurs
+    document.addEventListener('click', function(e) {
+      if (!suggestions.contains(e.target) && e.target !== input) {
+        suggestions.style.display = 'none';
+      }
+    });
+  </script>
 {% endblock %}

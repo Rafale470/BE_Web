@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, redirect, url_for, request, flash, abort
 from .model.bdd import verifAuthData
 from .controller.function import messageInfo
-
+from myApp.model.cellar import get_eurovoc_themes
 
 from .viewsthomas import view2
 
@@ -66,3 +66,10 @@ def logoutfonction():
        session["infoBleu"]="Déconnexion réussie"
        return redirect(url_for('index'))
 
+@app.route('/search_cellar', methods=['GET'])
+def search_cellar():
+    query = request.args.get('query', '')
+    results = None
+    if query:
+        results = get_eurovoc_themes(query)
+    return render_template('search.html.jinja', results=results, query=query)

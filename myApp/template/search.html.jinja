@@ -1,0 +1,27 @@
+{# filepath: h:\BEweb\BE_Web\myApp\template\search.html.jinja #}
+{% extends "base.html.jinja" %}
+
+{% block content %}
+  <h2>Recherche CELLAR par thème Eurovoc</h2>
+  <form method="get" action="{{ url_for('search_cellar') }}">
+    <label for="query">Thème Eurovoc :</label>
+    <input type="text" id="query" name="query" value="{{ query|default('') }}" required>
+    <button type="submit">Rechercher</button>
+  </form>
+
+  {% if results is defined %}
+    <h3>Résultats pour "{{ query }}" :</h3>
+    {% if results %}
+      <ul>
+        {% for uri, label in results.items() %}
+          <li>
+            <strong>{{ label }}</strong><br>
+            <small>{{ uri }}</small>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Aucun résultat trouvé.</p>
+    {% endif %}
+  {% endif %}
+{% endblock %}

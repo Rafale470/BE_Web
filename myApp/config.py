@@ -2,7 +2,7 @@ ENV = "development"
 DEBUG = True
 SEND_FILE_MAX_AGE_DEFAULT = 0 #vider le cache
 SECRET_KEY="maCleSuperSecurisee"
-
+SPARQL_ENDPOINT = "https://publications.europa.eu/webapi/rdf/sparql"
 COLOR ={
 'header' : '\033[95m',
 'blue' : '\033[94m',

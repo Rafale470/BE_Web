@@ -86,7 +86,7 @@ def get_works_by_eurovoc_uri(eurovoc_uri):
         for result in results['results']['bindings']:
             works.append({
                 'work_uri': result['s']['value'],
-                'psi': result['psi_sample']['value'],
+                'psi': result['s']['value'],  # Utilise l'URI du work comme lien
                 'title': result.get('title_sample', {}).get('value', ''),
                 'date': result.get('date_sample', {}).get('value', 'N/A'),
                 'eurovoc_uri': result['eurovoc']['value'],

@@ -54,7 +54,7 @@ def get_eurovoc_themes(name='aviation'):
         return {}
 
 
-def get_works_by_eurovoc_uri(eurovoc_uri):
+def get_works_by_eurovoc_uri(eurovoc_uri, limit=15):
     """
     Récupère les works liés à un concept Eurovoc donné (par son URI).
     
@@ -77,7 +77,7 @@ def get_works_by_eurovoc_uri(eurovoc_uri):
           OPTIONAL {{ ?s cdm:work_date_document ?date. }}
         }} GROUP BY ?s ?eurovoc ?label
         ORDER BY DESC(?date_sample)
-        LIMIT 15
+        LIMIT {limit}
     """
 
     results = get_cellar_data(query)
@@ -97,3 +97,22 @@ def get_works_by_eurovoc_uri(eurovoc_uri):
 # Exemple d'utilisation :
 #eurovoc_uri = "http://eurovoc.europa.eu/4505"
 #print(get_works_by_eurovoc_uri(eurovoc_uri))
+    """
+    PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        SELECT DISTINCT ?s (SAMPLE(?psi) AS ?psi_sample) (SAMPLE(?title) AS ?title_sample) ?eurovoc ?label (SAMPLE(?date) AS ?date_sample) (SAMPLE(?in_force) as ?in_force_sample) WHERE {{
+          <http://eurovoc.europa.eu/4505> skos:narrower* ?eurovoc.
+          ?s cdm:work_is_about_concept_eurovoc ?eurovoc.
+          ?eurovoc skos:prefLabel ?label.
+          OPTIONAL {{?s cdm:resource_legal_in-force ?in_force}}.
+          FILTER(lang(?label)='fr')
+          ?exp cdm:expression_belongs_to_work ?s.
+          ?exp cdm:expression_uses_language <http://publications.europa.eu/resource/authority/language/FRA>.
+          OPTIONAL {{ ?exp cdm:expression_title ?title. }}
+          ?s owl:sameAs ?psi.
+          OPTIONAL {{ ?s cdm:work_date_document ?date. }}
+        }} GROUP BY ?s ?eurovoc ?label
+        ORDER BY DESC(?date_sample)
+        LIMIT 15
+    """

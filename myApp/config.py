@@ -22,9 +22,9 @@ WEB_SERVER = {
 #Configuration du serveur de BDD
 
 DB_SERVER = {
-    "user": "root1",
-    "password": "mysql",
-    "host": "localhost",
+    "user": "root",
+    "password": "motdepassefort",
+    "host": "82.64.139.91",
     "port": 3306, #8889 si MAC
     "database": "IENAC24_Alerte_reglementation_aeronautique", #nom de la BDD
     "raise_on_warnings": True

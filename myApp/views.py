@@ -1,7 +1,7 @@
-from flask import Flask, render_template, session, redirect, url_for, request, flash, abort
+from flask import Flask, render_template, session, redirect, url_for, request, flash, abort, jsonify
 from .model.bdd import verifAuthData
 from .controller.function import messageInfo
-
+from myApp.model.cellar import get_eurovoc_themes, get_works_by_eurovoc_uri
 
 from .viewsthomas import view2
 
@@ -66,3 +66,32 @@ def logoutfonction():
        session["infoBleu"]="Déconnexion réussie"
        return redirect(url_for('index'))
 
+@app.route('/ajax/eurovoc_suggest')
+def eurovoc_suggest():
+    q = request.args.get('q', '')
+    results = get_eurovoc_themes(q)
+    # Retourne une liste d'objets {uri, label}
+    return jsonify([{'uri': uri, 'label': label} for uri, label in results.items()])
+
+@app.route('/search_cellar', methods=['GET'])
+def search_cellar():
+    eurovoc_label = request.args.get('eurovoc', '')
+    eurovoc_uri = request.args.get('eurovoc_uri', '')
+    works = None
+
+    # Suggestions pour le champ (optionnel, utile si tu veux pré-remplir)
+    eurovoc_suggestions = get_eurovoc_themes(eurovoc_label) if eurovoc_label else {}
+
+    # Si un thème a été choisi (URI présente), on cherche les textes associés
+    if eurovoc_uri:
+       print(f"Recherche des textes pour l'URI Eurovoc: {eurovoc_uri}")
+       works = get_works_by_eurovoc_uri(eurovoc_uri)
+       print(f"Nombre de textes trouvés: {len(works) if works else 0}")
+
+    return render_template(
+        'search.html.jinja',
+        eurovoc_label=eurovoc_label,
+        eurovoc_uri=eurovoc_uri,
+        eurovoc_suggestions=eurovoc_suggestions,
+        works=works
+    )

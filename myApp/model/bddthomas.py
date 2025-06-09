@@ -46,3 +46,53 @@ def del_membreData(idUser):
     }
     bddGen.deleteData(cnx, sql, param, msg)
     cnx.close()
+
+def get_themes(search=None):
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return []
+    cursor = cnx.cursor(dictionary=True)
+    if search:
+        sql = """
+            SELECT theme_id, nom, eurvoc_name
+            FROM Themes
+            WHERE nom LIKE %s OR eurvoc_name LIKE %s
+        """
+        like = f"%{search}%"
+        cursor.execute(sql, (like, like))
+    else:
+        sql = "SELECT theme_id, nom, eurvoc_name FROM Themes;"
+        cursor.execute(sql)
+    results = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return results
+
+def add_theme(nom, eurvoc_name):
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return None
+    sql = """
+        INSERT INTO Themes (nom, eurvoc_name)
+        VALUES (%s, %s);
+    """
+    params = (nom, eurvoc_name)
+    msg = {
+        "success": "addThemeOK",
+        "error":   "Failed to add theme"
+    }
+    bddGen.addData(cnx, sql, params, msg)
+    cnx.close()
+
+def delete_theme(theme_id):
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return None
+    sql = "DELETE FROM Themes WHERE theme_id = %s;"
+    params = (theme_id,)
+    msg = {
+        "success": "delThemeOK",
+        "error":   "Failed to delete theme"
+    }
+    bddGen.deleteData(cnx, sql, params, msg)
+    cnx.close()

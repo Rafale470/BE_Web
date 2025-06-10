@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for, request
+from flask import Flask, g, render_template, session, redirect, url_for, request
 import hashlib
 import re
 from .model.bddthomas import add_membreData
@@ -220,3 +220,13 @@ def view2(app) :
         # ───── GET : affiche la page ─────────────────────────────────
         print(f"{user}")
         return render_template("Ma_page.html.jinja", user=user, message=message,category= category)
+    @app.before_request
+    def load_current_user():
+        """Charge l’utilisateur courant à chaque requête s’il est connecté."""
+        user_id = session.get("user_id")
+        g.user = get_user_by_id(user_id) if user_id else None
+
+    @app.context_processor
+    def inject_user():
+        """Injecte automatiquement 'user' dans tous les templates."""
+        return {"user": g.user}

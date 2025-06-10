@@ -4,6 +4,7 @@ from .controller.function import messageInfo
 from myApp.model.cellar import get_eurovoc_themes, get_works_by_eurovoc_uri
 
 from .viewsthomas import view2
+from .model.bddthomas import get_user_by_id
 
 
 app = Flask(__name__)   

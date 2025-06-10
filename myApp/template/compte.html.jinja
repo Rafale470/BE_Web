@@ -1,0 +1,15 @@
+{% if user %}
+<div class="container my-4">
+  <div class="card mx-auto" style="max-width: 500px;">
+    <div class="card-header" style="background-color: #f5f0e6; color: #4e342e;">
+      <h5 class="mb-0">Mon compte</h5>
+    </div>
+    <div class="card-body">
+      <p><strong>Identifiant :</strong> {{ user.username }}</p>
+      <p><strong>Nom :</strong> {{ user.nom }}</p>
+      <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+      <p><strong>E-mail :</strong> {{ user.email }}</p>
+    </div>
+  </div>
+</div>
+{% endif %}

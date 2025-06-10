@@ -1,81 +1,114 @@
 {% include "script.html.jinja" %}
+{% include "info.html.jinja" %}
 {% include "head.html.jinja" %}
 {% include "header.html.jinja" %}
 
-<div class="container mt-5">
+<div class="container my-5">
+  <h1 class="text-center mb-5">Mon profil</h1>
 
-  <h1>Mon profil</h1>
-
-  {# ─── Messages flash ─────────────────────────────────────────── #}
+  {# ─── Messages flash ─────────────────────────────── #}
   {% if message %}
-    <div class="alert alert-{{ category }}">{{ message }}</div>
+    <div class="alert alert-{{ category }} text-center">
+      {{ message }}
+    </div>
   {% endif %}
 
-  {# ────────────────────────────────────────────────────────────── #
-     1. MODIFIER LES INFOS DE COMPTE
-     ────────────────────────────────────────────────────────────── #}
-  <h2>Mes informations</h2>
-  <form method="post" class="mb-5" style="max-width:500px;">
-    <div class="mb-3">
-      <label for="username" class="form-label">Identifiant</label>
-      <input type="text" class="form-control"
-             id="username" name="username"
-             value="{{ user.username }}" required>
-    </div>
+  <div class="row g-5 justify-content-center">
 
-    <div class="row mb-3">
-      <div class="col">
-        <label for="nom" class="form-label">Nom</label>
-        <input type="text" class="form-control"
-               id="nom" name="nom"
-               value="{{ user.nom }}" required>
+    <!-- Colonne gauche : Formulaires -->
+    <div class="col-lg-6">
+      <!-- Formulaire de mise à jour des infos -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0 text-primary">Modifier mes informations</h5>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="mb-3">
+              <label for="username" class="form-label">Identifiant</label>
+              <input type="text" class="form-control" id="username" name="username"
+                     value="{{ user.username }}" required>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col">
+                <label for="nom" class="form-label">Nom</label>
+                <input type="text" class="form-control" id="nom" name="nom"
+                       value="{{ user.nom }}" required>
+              </div>
+              <div class="col">
+                <label for="prenom" class="form-label">Prénom</label>
+                <input type="text" class="form-control" id="prenom" name="prenom"
+                       value="{{ user.prenom }}" required>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="email" class="form-label">E-mail</label>
+              <input type="email" class="form-control" id="email" name="email"
+                     value="{{ user.email }}" required>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" name="update_info" class="button large fit">
+                💾 Enregistrer les modifications
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="col">
-        <label for="prenom" class="form-label">Prénom</label>
-        <input type="text" class="form-control"
-               id="prenom" name="prenom"
-               value="{{ user.prenom }}" required>
+
+      <!-- Formulaire de changement de mot de passe -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0 text-danger">Modifier mon mot de passe</h5>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="mb-3">
+              <label for="old_password" class="form-label">Mot de passe actuel</label>
+              <input type="password" class="form-control" id="old_password"
+                     name="old_password" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="new_password" class="form-label">Nouveau mot de passe</label>
+              <input type="password" class="form-control" id="new_password"
+                     name="new_password" required>
+            </div>
+
+            <div class="mb-4">
+              <label for="confirm_password" class="form-label">Confirmer le nouveau mot de passe</label>
+              <input type="password" class="form-control" id="confirm_password"
+                     name="confirm_password" required>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" name="update_pass" class="button large fit">
+                🔒 Changer le mot de passe
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
 
-    <div class="mb-3">
-      <label for="email" class="form-label">E-mail</label>
-      <input type="email" class="form-control"
-             id="email" name="email"
-             value="{{ user.email }}" required>
+    <!-- Colonne droite : État du compte -->
+    <div class="col-lg-5">
+      <div class="card shadow-sm h-100">
+        <div class="card-header" style="background-color: #fdf7f0; color: #5a3825;">
+          <h5 class="mb-0">État actuel du compte</h5>
+        </div>
+        <div class="card-body">
+          <ul class="list-unstyled">
+            <li><strong>Identifiant :</strong> {{ user.username }}</li>
+            <li><strong>Nom :</strong> {{ user.nom }}</li>
+            <li><strong>Prénom :</strong> {{ user.prenom }}</li>
+            <li><strong>E-mail :</strong> {{ user.email }}</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <button type="submit" name="update_info" class="btn btn-primary">
-      Enregistrer les modifications
-    </button>
-  </form>
-
-  {# ────────────────────────────────────────────────────────────── #
-     2. CHANGER LE MOT DE PASSE
-     ────────────────────────────────────────────────────────────── #}
-  <h2>Modifier mon mot de passe</h2>
-  <form method="post" style="max-width:500px;">
-    <div class="mb-3">
-      <label for="old_password" class="form-label">Mot de passe actuel</label>
-      <input type="password" class="form-control"
-             id="old_password" name="old_password" required>
-    </div>
-
-    <div class="mb-3">
-      <label for="new_password" class="form-label">Nouveau mot de passe</label>
-      <input type="password" class="form-control"
-             id="new_password" name="new_password" required>
-    </div>
-
-    <div class="mb-3">
-      <label for="confirm_password" class="form-label">Confirmer le nouveau mot de passe</label>
-      <input type="password" class="form-control"
-             id="confirm_password" name="confirm_password" required>
-    </div>
-
-    <button type="submit" name="update_pass" class="btn btn-success">
-      Changer le mot de passe
-    </button>
-  </form>
-
+  </div>
 </div>

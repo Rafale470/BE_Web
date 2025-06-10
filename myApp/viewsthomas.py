@@ -11,6 +11,9 @@ from werkzeug.utils import secure_filename
 from .model.bddthomas import delete_user_theme
 from .model.bddthomas import add_user_theme
 from .model.bddthomas import get_user_theme_ids
+from .model.bddthomas import get_user_by_id
+from .model.bddthomas import update_user_info
+from .model.bddthomas import change_user_password
 import pandas, os
 from .controller.function import messageInfo
 from .model.bdd import exist 
@@ -141,3 +144,62 @@ def view2(app) :
             category=category,
             search=search
         )
+        
+    @app.route('/mon_compte', methods=['GET', 'POST'])
+    def mon_compte():
+        user_id = session.get('user_id')
+        if not user_id:
+            return redirect(url_for('login'))
+
+        message  = session.pop('message', None)
+        category = session.pop('category', None)
+        user     = get_user_by_id(user_id)
+
+        # ───── POST : deux formulaires distincts ─────────────────────
+        if request.method == 'POST':
+
+            # 1) Infos générales
+            if 'update_info' in request.form:
+                update_user_info(
+                    user_id,
+                    request.form['username'].strip(),
+                    request.form['nom'].strip(),
+                    request.form['prenom'].strip(),
+                    request.form['email'].strip()
+                )
+                session['message']  = "Profil mis à jour."
+                session['category'] = 'success'
+                return redirect(url_for('mon_compte'))
+
+            # 2) Mot de passe
+            elif 'update_pass' in request.form:
+                if request.form['new_password'] != request.form['confirm_password']:
+                    session['message']  = "Les deux mots de passe ne correspondent pas."
+                    session['category'] = 'danger'
+                    return redirect(url_for('mon_compte'))
+
+                # Vérifie l'ancien mot de passe
+                old_hash = hashlib.sha256(
+                    request.form['old_password'].encode()).hexdigest()
+                if old_hash != user['password']:
+                    session['message']  = "Mot de passe actuel incorrect."
+                    session['category'] = 'danger'
+                    return redirect(url_for('mon_compte'))
+
+                # Hash du nouveau mot de passe
+                new_hash = hashlib.sha256(
+                    request.form['new_password'].encode()).hexdigest()
+                change_user_password(user_id, new_hash)
+
+                session['message']  = "Mot de passe changé."
+                session['category'] = 'success'
+                return redirect(url_for('mon_compte'))
+
+        # ───── GET : affiche la page ─────────────────────────────────
+        params = {
+        "user": user,            # ← clé attendue par le template
+        "message": message,
+        "category": category
+    }
+
+        return render_template("Ma_page.html.jinja", **params)

@@ -132,3 +132,35 @@ def delete_user_theme(user_id, theme_id):
                       {"success": "delUserThemeOK",
                        "error":   "Failed del user theme"})
     cnx.close()
+
+def get_user_by_id(user_id):
+    cnx = bddGen.connexion()
+    c   = cnx.cursor(dictionary=True)
+    c.execute("SELECT * FROM Users WHERE user_id=%s;", (user_id,))
+    user = c.fetchone()
+    c.close(); cnx.close()
+    return user
+
+
+def update_user_info(user_id, username, nom, prenom, email):
+    cnx = bddGen.connexion()
+    sql = """
+      UPDATE Users
+      SET username=%s, nom=%s, prenom=%s, email=%s
+      WHERE user_id=%s;
+    """
+    bddGen.addData(cnx, sql,
+                      (username, nom, prenom, email, user_id),
+                      {"success": "updUserOK",
+                       "error":   "Failed update user"})
+    cnx.close()
+
+
+def change_user_password(user_id, new_hash):
+    cnx = bddGen.connexion()
+    sql = "UPDATE Users SET password=%s WHERE user_id=%s;"
+    bddGen.addData(cnx, sql,
+                      (new_hash, user_id),
+                      {"success": "updPassOK",
+                       "error":   "Failed update pass"})
+    cnx.close()

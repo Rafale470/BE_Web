@@ -66,6 +66,7 @@ def view2(app) :
 
     @app.route('/gestion_reglementation', methods=['GET', 'POST'])
     def gestion_reglementation():
+        if session.get("privilege") == "admin" :
             message  = session.pop('message', None)
             category = session.pop('category', None)
             search   = None
@@ -100,6 +101,8 @@ def view2(app) :
                 category=category,
                 search=search
             )
+        else : 
+            return redirect("/index")
             
     @app.route('/gestion_user_reglementation', methods=['GET', 'POST'])
     def gestion_user_reglementation():
@@ -196,10 +199,5 @@ def view2(app) :
                 return redirect(url_for('mon_compte'))
 
         # ───── GET : affiche la page ─────────────────────────────────
-        params = {
-        "user": user,            # ← clé attendue par le template
-        "message": message,
-        "category": category
-    }
-
-        return render_template("Ma_page.html.jinja", **params)
+        print(f"{user}")
+        return render_template("Ma_page.html.jinja", user=user, message=message,category= category)

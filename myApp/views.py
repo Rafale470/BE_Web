@@ -51,15 +51,6 @@ def loginfonction():
 def ccfonction():
        return render_template("creation_compte.html.jinja")
 
-@app.route("/Ma_page")
-def Ma_page():
-       if session.get("logged") :
-              params = messageInfo()
-              return render_template("Ma_page.html.jinja", **params)
-       else :
-              params = messageInfo()
-              return redirect(url_for("login"))
-
 @app.route("/logout")
 def logoutfonction():
        session.clear()

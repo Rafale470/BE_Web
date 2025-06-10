@@ -33,3 +33,16 @@ def exist(login):
     cnx.close()
     success = (len(res) == 1)
     return (success)
+
+def mail_exist(mail):
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return None
+    cursor = cnx.cursor(dictionary=True)
+    sql = "SELECT email FROM Users WHERE email = %s"
+    cursor.execute(sql, [mail])
+    res = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    success = (len(res) == 1)
+    return (success)

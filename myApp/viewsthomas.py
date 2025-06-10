@@ -18,7 +18,8 @@ from .model.bddthomas import get_prefs_by_user
 from .model.bddthomas import get_all_themes
 import pandas, os
 from .controller.function import messageInfo
-from .model.bdd import exist 
+from .model.bdd import exist
+from .model.bdd import mail_exist 
 UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__))+'/files/'
 
 def view2(app) :
@@ -31,6 +32,12 @@ def view2(app) :
         identifiant = request.form['identifiant']
         if exist(identifiant):
             session["infoRouge"] = "Un compte avec cet identifiant existe déjà"
+            params = messageInfo()
+            return render_template("creation_compte.html.jinja", **params)
+        email = request.form['mail']
+        print(f"mail={email}")
+        if mail_exist(email):
+            session["infoRouge"] = "Un compte avec cet adresse mail existe déjà"
             params = messageInfo()
             return render_template("creation_compte.html.jinja", **params)
         motPasse =hashlib.sha256(request.form['password'].encode())
@@ -220,6 +227,9 @@ def view2(app) :
         # ───── GET : affiche la page ─────────────────────────────────
         print(f"{user}")
         return render_template("Ma_page.html.jinja", user=user, message=message,category= category)
+    
+    
+    #permet d'avoir user à dispo dans tous les templates
     @app.before_request
     def load_current_user():
         """Charge l’utilisateur courant à chaque requête s’il est connecté."""

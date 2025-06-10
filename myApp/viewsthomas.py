@@ -10,6 +10,7 @@ from .model.bddthomas import delete_theme
 from werkzeug.utils import secure_filename
 from .model.bddthomas import delete_user_theme
 from .model.bddthomas import add_user_theme
+from .model.bddthomas import get_user_theme_ids
 import pandas, os
 from .controller.function import messageInfo
 from .model.bdd import exist 
@@ -96,36 +97,47 @@ def view2(app) :
                 category=category,
                 search=search
             )
+            
     @app.route('/gestion_user_reglementation', methods=['GET', 'POST'])
     def gestion_user_reglementation():
-        """if session.get("privilege") == "admin":"""
-        message = session.pop('message', None)
+        # ── sécurité : utilisateur connecté ───────────────────────────
+        user_id = session.get('user_id')
+        if not user_id:
+            return redirect(url_for('login'))
+
+        # ── messages flash ────────────────────────────────────────────
+        message  = session.pop('message', None)
         category = session.pop('category', None)
-        search = None
+        search   = None
 
+        # ── POST : filtrer / ajouter / retirer ────────────────────────
         if request.method == 'POST':
-            if 'user_delete' in request.form:
-                theme_id = request.form['theme_id']
-                delete_user_theme(theme_id)
-                session['message']  = "Le thème a bien été supprimé."
-                session['category'] = 'success'
-                return redirect(url_for('gestion_user_reglementation'))
-
-            if 'user_add' in request.form:
-                nom         = request.form['nom'].strip()
-                eurvoc_name = request.form['eurvoc_name'].strip()
-                add_user_theme(nom, eurvoc_name)
-                session['message']  = "Le thème a bien été ajouté."
-                session['category'] = 'success'
-                return redirect(url_for('gestion_user_reglementation'))
-
             if 'search' in request.form:
-                search = request.form.get('search_term', '').strip()
+                search = request.form.get('search_term','').strip()
 
-        themes = get_themes(search)
+            elif 'user_add' in request.form:
+                theme_id = request.form['theme_id']
+                add_user_theme(user_id, theme_id)
+                session['message']  = "Thème ajouté à vos préférences."
+                session['category'] = 'success'
+                return redirect(url_for('gestion_user_reglementation'))
+
+            elif 'user_delete' in request.form:
+                theme_id = request.form['theme_id']
+                delete_user_theme(user_id, theme_id)
+                session['message']  = "Thème retiré de vos préférences."
+                session['category'] = 'success'
+                return redirect(url_for('gestion_user_reglementation'))
+
+        # ── données pour l’affichage ──────────────────────────────────
+        themes           = get_themes(search)            # tous les thèmes (avec filtre)
+        user_theme_ids   = set(get_user_theme_ids(user_id))
+
         return render_template(
             'gestion_user_reglementation.html.jinja',
             themes=themes,
+            user_theme_ids=user_theme_ids,
             message=message,
             category=category,
-            search=search)
+            search=search
+        )

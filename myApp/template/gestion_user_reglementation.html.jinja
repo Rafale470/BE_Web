@@ -6,12 +6,14 @@
 
   <h1>Gestion utilisateur des thèmes réglementaires</h1>
 
+  {# ─── Messages flash ─────────────────────────────────────────── #}
   {% if message %}
     <div class="alert alert-{{ category }}">
       {{ message }}
     </div>
   {% endif %}
 
+  {# ─── Filtre / recherche dans tous les thèmes ───────────────── #}
   <form method="post" class="mb-4 d-flex align-items-center">
     <input
       type="text"
@@ -21,44 +23,53 @@
       class="form-control me-2"
       style="max-width:300px;"
     >
-    <button type="submit" name="search" class="btn btn-primary">Filtrer</button>
+    <button type="submit" name="search" class="btn btn-primary">
+      Filtrer
+    </button>
   </form>
 
+  {# ─── Tableau des thèmes ─────────────────────────────────────── #}
   <table class="table">
     <thead>
       <tr>
-        <th>Supp</th>
+        <th style="width:70px;">Action</th>
         <th>Nom</th>
-        <th>Eurvoc</th>
+        <th>Eurovoc ID</th>
       </tr>
     </thead>
     <tbody>
       {% if themes %}
         {% for theme in themes %}
           <tr>
+            {# ── Colonne Action : + ou Corbeille selon la préférence ── #}
             <td>
-              <form method="post" class="d-inline">
-                <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
-                <button
-                  type="submit"
-                  name="user_add"
-                  class="btn btn-link p-0"
-                >
-                  <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-              </form>
-              <form method="post" class="d-inline">
-                <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
-                <button
-                  type="submit"
-                  name="user_delete"
-                  class="btn btn-link p-0"
-                  onclick="return confirm('Supprimer ce thème ?');"
-                >
-                  <i class="fa-solid fa-trash-can text-danger"></i>
-                </button>
-              </form>
+              {% if theme.theme_id in user_theme_ids %}
+                {# --------- Retirer la préférence --------- #}
+                <form method="post" class="d-inline">
+                  <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
+                  <button type="submit"
+                          name="user_delete"
+                          class="btn btn-link p-0"
+                          title="Retirer de mes thèmes"
+                          onclick="return confirm('Retirer ce thème ?');">
+                    <i class="fa-solid fa-trash-can text-danger"></i>
+                  </button>
+                </form>
+              {% else %}
+                {# --------- Ajouter la préférence --------- #}
+                <form method="post" class="d-inline">
+                  <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
+                  <button type="submit"
+                          name="user_add"
+                          class="btn btn-link p-0"
+                          title="Ajouter à mes thèmes">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                  </button>
+                </form>
+              {% endif %}
             </td>
+
+            {# ── Nom + Eurovoc ID ── #}
             <td>{{ theme.nom }}</td>
             <td>{{ theme.eurvoc_name }}</td>
           </tr>
@@ -71,26 +82,5 @@
     </tbody>
   </table>
 
-  <hr>
-
-  <h2>Ajouter un nouveau thème</h2>
-  <form method="post" class="d-flex align-items-center">
-    <input
-      type="text"
-      name="nom"
-      placeholder="Nom du thème"
-      required
-      class="form-control me-2"
-      style="max-width:200px;"
-    >
-    <input
-      type="text"
-      name="eurvoc_name"
-      placeholder="Eurvoc name"
-      required
-      class="form-control me-2"
-      style="max-width:200px;"
-    >
-    <button type="submit" name="add" class="btn btn-success">Ajouter</button>
-  </form>
 </div>
+

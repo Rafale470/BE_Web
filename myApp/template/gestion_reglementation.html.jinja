@@ -61,26 +61,62 @@
     </tbody>
   </table>
 
-  <hr>
 
-  <h2>Ajouter un nouveau thème</h2>
-  <form method="post" class="d-flex align-items-center">
-    <input
-      type="text"
-      name="nom"
-      placeholder="Nom du thème"
-      required
-      class="form-control me-2"
-      style="max-width:200px;"
-    >
-    <input
-      type="text"
-      name="eurvoc_name"
-      placeholder="Eurvoc name"
-      required
-      class="form-control me-2"
-      style="max-width:200px;"
-    >
-    <button type="submit" name="add" class="btn btn-success">Ajouter</button>
-  </form>
-</div>
+<h2>Ajouter un thème depuis Eurovoc</h2>
+<form method="post" class="position-relative" style="max-width:400px;">
+  <label for="eurovoc">Thème Eurovoc :</label>
+  <input type="text"
+         id="eurovoc"
+         name="eurovoc"          {# ← label du thème #}
+         autocomplete="off"
+         required
+         class="form-control">
+  <input type="hidden"
+         id="eurovoc_uri"
+         name="eurovoc_uri">    
+
+  <div id="suggestions"
+       style="border:1px solid #ccc; display:none;
+              position:absolute; background:white; z-index:10;
+              max-height:200px; overflow-y:auto; width:100%;">
+  </div>
+
+  <button type="submit" name="add" class="btn btn-success mt-2">Ajouter</button>
+</form>
+
+<script>
+  const input       = document.getElementById('eurovoc');
+  const suggestions = document.getElementById('suggestions');
+  const hiddenUri   = document.getElementById('eurovoc_uri');
+
+  input.addEventListener('input', () => {
+    const q = input.value;
+    if (q.length < 2) { suggestions.style.display = 'none'; return; }
+
+    fetch('/ajax/eurovoc_suggest?q=' + encodeURIComponent(q))
+      .then(r => r.json())
+      .then(data => {
+        suggestions.innerHTML = '';
+        if (!data.length) { suggestions.style.display = 'none'; return; }
+
+        data.forEach(item => {
+          const div = document.createElement('div');
+          div.textContent = item.label;
+          div.style.cursor = 'pointer';
+          div.onclick = () => {
+            input.value    = item.label;   
+            hiddenUri.value = item.uri;     
+            suggestions.style.display = 'none';
+          };
+          suggestions.appendChild(div);
+        });
+        suggestions.style.display = 'block';
+      });
+  });
+
+  document.addEventListener('click', e => {
+    if (!suggestions.contains(e.target) && e.target !== input) {
+      suggestions.style.display = 'none';
+    }
+  });
+</script>

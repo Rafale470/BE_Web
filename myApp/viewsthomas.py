@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, request
 import hashlib
+import re
 from .model.bddthomas import add_membreData
 from .model.bddthomas import get_membresData
 from .model.bddthomas import del_membreData
@@ -59,29 +60,31 @@ def view2(app) :
 
     @app.route('/gestion_reglementation', methods=['GET', 'POST'])
     def gestion_reglementation():
-        if session.get("privilege") == "admin":
-            message = session.pop('message', None)
+            message  = session.pop('message', None)
             category = session.pop('category', None)
-            search = None
+            search   = None
 
             if request.method == 'POST':
-                if 'delete' in request.form:
-                    theme_id = request.form['theme_id']
-                    delete_theme(theme_id)
+                if 'search' in request.form:
+                    search = request.form.get('search_term', '').strip()
+
+                elif 'delete' in request.form:
+                    delete_theme(request.form['theme_id'])
                     session['message']  = "Le thème a bien été supprimé."
                     session['category'] = 'success'
                     return redirect(url_for('gestion_reglementation'))
 
-                if 'add' in request.form:
-                    nom         = request.form['nom'].strip()
-                    eurvoc_name = request.form['eurvoc_name'].strip()
-                    add_theme(nom, eurvoc_name)
-                    session['message']  = "Le thème a bien été ajouté."
+                elif 'add' in request.form:
+                    label = request.form['eurovoc'].strip()
+                    uri   = request.form['eurovoc_uri'].strip()
+
+                    m = re.search(r'(\d+)$', uri)
+                    eurvoc_id = m.group(1) if m else uri
+
+                    add_theme(label, eurvoc_id)
+                    session['message']  = f"Thème « {label} » ajouté (ID {eurvoc_id})."
                     session['category'] = 'success'
                     return redirect(url_for('gestion_reglementation'))
-
-                if 'search' in request.form:
-                    search = request.form.get('search_term', '').strip()
 
             themes = get_themes(search)
             return render_template(
@@ -91,5 +94,3 @@ def view2(app) :
                 category=category,
                 search=search
             )
-        else:
-            return redirect(url_for('login'))

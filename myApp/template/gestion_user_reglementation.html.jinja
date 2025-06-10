@@ -1,0 +1,96 @@
+{% include "script.html.jinja" %}
+{% include "head.html.jinja" %}
+{% include "header.html.jinja" %}
+
+<div class="container mt-5">
+
+  <h1>Gestion utilisateur des thèmes réglementaires</h1>
+
+  {% if message %}
+    <div class="alert alert-{{ category }}">
+      {{ message }}
+    </div>
+  {% endif %}
+
+  <form method="post" class="mb-4 d-flex align-items-center">
+    <input
+      type="text"
+      name="search_term"
+      placeholder="Rechercher un thème…"
+      value="{{ search or '' }}"
+      class="form-control me-2"
+      style="max-width:300px;"
+    >
+    <button type="submit" name="search" class="btn btn-primary">Filtrer</button>
+  </form>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Supp</th>
+        <th>Nom</th>
+        <th>Eurvoc</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if themes %}
+        {% for theme in themes %}
+          <tr>
+            <td>
+              <form method="post" class="d-inline">
+                <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
+                <button
+                  type="submit"
+                  name="user_add"
+                  class="btn btn-link p-0"
+                >
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+              </form>
+              <form method="post" class="d-inline">
+                <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
+                <button
+                  type="submit"
+                  name="user_delete"
+                  class="btn btn-link p-0"
+                  onclick="return confirm('Supprimer ce thème ?');"
+                >
+                  <i class="fa-solid fa-trash-can text-danger"></i>
+                </button>
+              </form>
+            </td>
+            <td>{{ theme.nom }}</td>
+            <td>{{ theme.eurvoc_name }}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="3">Aucun thème trouvé.</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <hr>
+
+  <h2>Ajouter un nouveau thème</h2>
+  <form method="post" class="d-flex align-items-center">
+    <input
+      type="text"
+      name="nom"
+      placeholder="Nom du thème"
+      required
+      class="form-control me-2"
+      style="max-width:200px;"
+    >
+    <input
+      type="text"
+      name="eurvoc_name"
+      placeholder="Eurvoc name"
+      required
+      class="form-control me-2"
+      style="max-width:200px;"
+    >
+    <button type="submit" name="add" class="btn btn-success">Ajouter</button>
+  </form>
+</div>

@@ -8,6 +8,8 @@ from .model.bddthomas import get_themes
 from .model.bddthomas import add_theme
 from .model.bddthomas import delete_theme
 from werkzeug.utils import secure_filename
+from .model.bddthomas import delete_user_theme
+from .model.bddthomas import add_user_theme
 import pandas, os
 from .controller.function import messageInfo
 from .model.bdd import exist 
@@ -94,3 +96,36 @@ def view2(app) :
                 category=category,
                 search=search
             )
+    @app.route('/gestion_user_reglementation', methods=['GET', 'POST'])
+    def gestion_user_reglementation():
+        """if session.get("privilege") == "admin":"""
+        message = session.pop('message', None)
+        category = session.pop('category', None)
+        search = None
+
+        if request.method == 'POST':
+            if 'user_delete' in request.form:
+                theme_id = request.form['theme_id']
+                delete_user_theme(theme_id)
+                session['message']  = "Le thème a bien été supprimé."
+                session['category'] = 'success'
+                return redirect(url_for('gestion_user_reglementation'))
+
+            if 'user_add' in request.form:
+                nom         = request.form['nom'].strip()
+                eurvoc_name = request.form['eurvoc_name'].strip()
+                add_user_theme(nom, eurvoc_name)
+                session['message']  = "Le thème a bien été ajouté."
+                session['category'] = 'success'
+                return redirect(url_for('gestion_user_reglementation'))
+
+            if 'search' in request.form:
+                search = request.form.get('search_term', '').strip()
+
+        themes = get_themes(search)
+        return render_template(
+            'gestion_user_reglementation.html.jinja',
+            themes=themes,
+            message=message,
+            category=category,
+            search=search)

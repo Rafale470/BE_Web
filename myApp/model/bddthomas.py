@@ -96,3 +96,56 @@ def delete_theme(theme_id):
     }
     bddGen.deleteData(cnx, sql, params, msg)
     cnx.close()
+
+
+#fonction de supression de thème pour l'utilisateur. La requete SQL est à adapter en fonction de comment est organisé la BDD
+def delete_user_theme(theme_id):
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return None
+    sql = "DELETE FROM Preferences WHERE theme_user = %s;"
+    params = (theme_id,)
+    msg = {
+        "success": "delThemeOK",
+        "error":   "Failed to delete theme"
+    }
+    bddGen.deleteData(cnx, sql, params, msg)
+    cnx.close()
+
+#fonction d'ajout de thème pour l'utilisateur. La requete SQL est à adapter en fonction de comment est organisé la BDD
+def add_user_theme(nom, eurvoc_name):
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return None
+    sql = """
+        INSERT INTO Preferences (user_id, theme_id)
+        VALUES (%s, %s);
+    """
+    params = (nom, eurvoc_name)
+    msg = {
+        "success": "addThemeOK",
+        "error":   "Failed to add theme"
+    }
+    bddGen.addData(cnx, sql, params, msg)
+    cnx.close()
+
+def get_user_themes(search=None):
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return []
+    cursor = cnx.cursor(dictionary=True)
+    if search:
+        sql = """
+            SELECT theme_id, nom, eurvoc_name
+            FROM Themes
+            WHERE nom LIKE %s OR eurvoc_name LIKE %s
+        """
+        like = f"%{search}%"
+        cursor.execute(sql, (like, like))
+    else:
+        sql = "SELECT theme_id, nom, eurvoc_name FROM Themes;"
+        cursor.execute(sql)
+    results = cursor.fetchall()
+    cursor.close()
+    cnx.close()
+    return results

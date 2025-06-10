@@ -164,3 +164,36 @@ def change_user_password(user_id, new_hash):
                       {"success": "updPassOK",
                        "error":   "Failed update pass"})
     cnx.close()
+    
+def get_prefs_by_user():
+    """
+    Renvoie un dictionnaire : { user_id: [ {theme_id, nom}, … ] }
+    Un seul appel SQL pour éviter la boucle N+1.
+    """
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return {}
+
+    cur = cnx.cursor(dictionary=True)
+    cur.execute("""
+        SELECT p.user_id, t.theme_id, t.nom
+        FROM Preferences AS p
+        JOIN Themes      AS t ON t.theme_id = p.theme_id
+        ORDER BY t.nom;
+    """)
+    prefs = {}
+    for row in cur.fetchall():
+        prefs.setdefault(row["user_id"], []).append(
+            {"theme_id": row["theme_id"], "nom": row["nom"]}
+        )
+    cur.close(); cnx.close()
+    return prefs
+
+def get_all_themes():
+    """Renvoie la liste complète des thèmes (id + nom)."""
+    cnx = bddGen.connexion()
+    cur = cnx.cursor(dictionary=True)
+    cur.execute("SELECT theme_id, nom FROM Themes ORDER BY nom;")
+    rows = cur.fetchall()
+    cur.close(); cnx.close()
+    return rows

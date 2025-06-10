@@ -14,6 +14,8 @@ from .model.bddthomas import get_user_theme_ids
 from .model.bddthomas import get_user_by_id
 from .model.bddthomas import update_user_info
 from .model.bddthomas import change_user_password
+from .model.bddthomas import get_prefs_by_user
+from .model.bddthomas import get_all_themes
 import pandas, os
 from .controller.function import messageInfo
 from .model.bdd import exist 
@@ -43,18 +45,35 @@ def view2(app) :
     def test():
         return render_template("index.html.jinja")
 
-    @app.route("/sgbd")
+    @app.route("/sgbd", methods=['GET', 'POST'])   
     def sgbd():
-        if session.get("privilege") == "admin" :
-            listeMembres = get_membresData()
-            params ={
-            'liste':listeMembres
-            }
-            #params = f.messageInfo(params)
-            return render_template("sgbd.html.jinja", **params)
-        else : 
+        if session.get("privilege") != "admin":
             return redirect("/index")
-    
+
+        # ---------- Actions POST ----------
+        if request.method == 'POST':
+            user_id  = request.form['user_id']
+            if 'delete_pref' in request.form:
+                delete_user_theme(user_id, request.form['theme_id'])
+                session["infoVert"]="Préférence supprimée"
+            elif 'add_pref' in request.form:
+                add_user_theme(user_id, request.form['theme_id'])
+                session["infoVert"]="Préférence ajoutée"
+            return redirect(url_for('sgbd'))
+
+        # ---------- Données d’affichage ----------
+        users       = get_membresData()
+        prefs_by_id = get_prefs_by_user()
+        all_themes  = get_all_themes()         # pour les menus “Ajouter”
+        print(prefs_by_id)
+        print(all_themes)
+        
+
+        return render_template("sgbd.html.jinja",
+                            liste=users,
+                            preferences_by_user=prefs_by_id,
+                            all_themes=all_themes)
+        
     @app.route("/suppMembre/<user_id>")
     def suppMembre(user_id=""):
         del_membreData(user_id)

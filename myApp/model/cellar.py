@@ -68,6 +68,7 @@ def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
            (group_concat(str(?date_ev);separator=";") as ?dates_ev)
            (str(?celex) as ?celex)
            (group_concat(str(?psi);separator=";") as ?psis)
+           ?date_document
     WHERE {{
       <{eurovoc_uri}> skos:narrower* ?eurovoc.
       ?s cdm:work_is_about_concept_eurovoc ?eurovoc.
@@ -78,6 +79,7 @@ def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
       OPTIONAL {{ ?s cdm:resource_legal_date_entry-into-force ?date_if. }}
       OPTIONAL {{ ?s cdm:resource_legal_date_end-of-validity ?date_ev. }}
       OPTIONAL {{ ?s cdm:resource_legal_id_celex ?celex. }}
+      OPTIONAL {{ ?s cdm:work_date_document ?date_document. }}
       ?s owl:sameAs ?psi.
       FILTER NOT EXISTS {{ ?s a cdm:publication_general }}
       FILTER NOT EXISTS {{
@@ -112,6 +114,7 @@ def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
                 'dates_ev': result.get('dates_ev', {}).get('value', ''),
                 'celex': result.get('celex', {}).get('value', ''),
                 'psis': result.get('psis', {}).get('value', ''),
+                'date_document': result.get('date_document', {}).get('value', 'N/A')
             })
     return works
 
@@ -127,7 +130,7 @@ def get_work_by_uri(work_uri):
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
         PREFIX owl: <http://www.w3.org/2002/07/owl#>
 
-        select DISTINCT group_concat(str(?eurovoc);separator=";") as ?psis ?type ?exp ?title (str(?force) as ?force)
+        select DISTINCT group_concat(str(?eurovoc);separator=";") as ?psis ?type ?exp ?title (str(?force) as ?force) ?date_document
                     ?date_if
                     ?date_ev
                     group_concat(str(?celex); separator=";") as ?celex
@@ -139,6 +142,7 @@ def get_work_by_uri(work_uri):
                         OPTIONAL {{ <{work_uri}> cdm:resource_legal_date_end-of-validity ?date_ev. }}
                         OPTIONAL {{ <{work_uri}> cdm:resource_legal_id_celex ?celex. }}
                         OPTIONAL {{ <{work_uri}> owl:sameAs ?psi. }}
+                        OPTIONAL {{ <{work_uri}> cdm:work_date_document ?date_document. }}
                         OPTIONAL {{
                                     ?exp cdm:expression_belongs_to_work <{work_uri}>.
                                     ?exp cdm:expression_uses_language <{work_uri}>.
@@ -161,6 +165,7 @@ def get_work_by_uri(work_uri):
             'date_ev': result.get('date_ev', {}).get('value', ''),
             'celex': result.get('celex', {}).get('value', ''),
             'psi': result.get('psi', {}).get('value', ''),
+            'date_document': result.get('date_document', {}).get('value', 'N/A')
         }
     
     return None

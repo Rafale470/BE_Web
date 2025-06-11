@@ -27,7 +27,7 @@ def selectData(cnx, sql, param, msg):
         dict = cursor.fetchall() 
         cursor.close()
         #session['successDB'] = msg['success']
-        print(COLOR['green'] +msg['success'] + COLOR['end']) #affichage dans terminal
+        #print(COLOR['green'] +msg['success'] + COLOR['end']) #affichage dans terminal
     except mysql.connector.Error as err:
         dict = None
         session['errorDB'] = msg['error']+": {}".format(err)

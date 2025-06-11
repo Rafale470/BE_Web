@@ -64,10 +64,10 @@ def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
     PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
     PREFIX owl: <http://www.w3.org/2002/07/owl#>
     SELECT ?s ?eurovoc ?label ?type ?exp ?title (str(?force) as ?force) 
-           (group_concat(str(?date_if);separator=";") as ?dates_if)
-           (group_concat(str(?date_ev);separator=";") as ?dates_ev)
+           (group_concat(DISTINCT str(?date_if);separator=";") as ?dates_if)
+           (group_concat(DISTINCT str(?date_ev);separator=";") as ?dates_ev)
            (str(?celex) as ?celex)
-           (group_concat(str(?psi);separator=";") as ?psis)
+           (group_concat(DISTINCT str(?psi);separator=";") as ?psis)
            ?date_document
     WHERE {{
       <{eurovoc_uri}> skos:narrower* ?eurovoc.
@@ -118,7 +118,7 @@ def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
             })
     return works
 
-def get_work_by_uri(work_uri):
+def get_work_by_uri(work_uri, limit=100):
     """
     Récupère les détails d'un work spécifique par son URI.
     
@@ -146,12 +146,12 @@ def get_work_by_uri(work_uri):
                         OPTIONAL {{ <{work_uri}> cdm:work_date_document ?date_document. }}
                         OPTIONAL {{
                                     ?exp cdm:expression_belongs_to_work <{work_uri}>.
-                                    ?exp cdm:expression_uses_language <{work_uri}>.
+                                    ?exp cdm:expression_uses_language <http://publications.europa.eu/resource/authority/language/FRA>.
                                     OPTIONAL {{ ?exp cdm:expression_title ?title. }}
                 }}
                 ?eurovoc skos:prefLabel ?label.
                 FILTER(lang(?label)='fr')
-        }} limit 100
+        }} limit {limit}
     """
 
     results = get_cellar_data(query)

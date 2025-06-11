@@ -71,7 +71,9 @@ def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
     WHERE {{
       <{eurovoc_uri}> skos:narrower* ?eurovoc.
       ?s cdm:work_is_about_concept_eurovoc ?eurovoc.
-      ?s cdm:work_has_resource-type ?type.
+      ?s cdm:work_has_resource-type ?t.
+      
+
       OPTIONAL {{ ?s cdm:resource_legal_in-force ?force. }}
       OPTIONAL {{ ?s cdm:resource_legal_date_entry-into-force ?date_if. }}
       OPTIONAL {{ ?s cdm:resource_legal_date_end-of-validity ?date_ev. }}
@@ -82,6 +84,8 @@ def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
         ?s cdm:resource_legal_id_sector ?sector.
         FILTER(str(?sector) in ('C','6','7','8','9'))
       }}
+      ?t skos:prefLabel ?type.
+      FILTER(lang(?type)='fr')
       ?eurovoc skos:prefLabel ?label.
       FILTER(lang(?label)='fr')
       ?exp cdm:expression_belongs_to_work ?s.

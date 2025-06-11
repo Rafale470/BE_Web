@@ -1,4 +1,3 @@
-
 import mysql.connector
 from flask import session
 from myApp.config import DB_SERVER, COLOR
@@ -108,7 +107,6 @@ def get_user_theme_ids(user_id):
     ids = [row[0] for row in cur.fetchall()]
     cur.close(); cnx.close()
     return ids
-
 
 def add_user_theme(user_id, theme_id):
     """Ajoute (user_id, theme_id) à user_themes si absent."""

@@ -3,6 +3,8 @@
 {% include "head.html.jinja" %}
 {% include "header.html.jinja" %}
 
+
+
 <div class="container my-5">
   <h1 class="text-center mb-5">Mon profil</h1>
 
@@ -109,15 +111,22 @@
 
     <div class="mt-4">
       <h6 class="text-muted mb-2">Mes préférences thématiques</h6>
+{% set has_pref = false %}
 <ul class="list-group list-group-flush">
   {% for theme in themes %}
     {% if theme.theme_id in user_theme_ids %}
+      {% set has_pref = true %}
       <li class="list-group-item" style="background-color: #fffdf9;">
+        <i class="fa-solid fa-tag me-2" style="color: #a1866f;"></i>
         {{ theme.nom }}
       </li>
     {% endif %}
   {% endfor %}
 </ul>
+
+{% if not has_pref %}
+  <p class="text-muted">Aucune préférence sélectionnée.</p>
+{% endif %}
 
     </div>
   </div>
@@ -125,4 +134,32 @@
     </div>
 
   </div>
+</div>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th style="width:700px;">Mes préférences</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if themes %}
+        {% for theme in themes %}
+
+            <tr>
+              {% if theme.theme_id in user_theme_ids %}
+                {# --------- Retirer la préférence --------- #}
+                  <td>{{ theme.nom }}</td>
+              {% endif %}
+            </tr>
+
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="3">Aucun thème trouvé.</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
 </div>

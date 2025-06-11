@@ -5,9 +5,11 @@
             <li><a href="https://www.icao.int/about-icao/Pages/FR/default.aspx">OACI</a></li>
             <li><a href="https://www.easa.europa.eu/en/home">EASA</a></li>
             <li><a href="https://www.legifrance.gouv.fr/">LegiFrance</a></li>
-            <li><a href="/Ma_page">Ma page</a></li>
+            <li><a href="/mon_compte">Ma page</a></li>
+            <li><a href="/gestion_user_reglementation">Préférence</a></li>
             {% if session["privilege"] == "admin" %}
             <li><a href="/sgbd">Gestion admin</a></li>
+            <li><a href="/gestion_reglementation">Gestion textes</a></li>
             {% endif %}
             <li><a href="A_propos">A propos</a></li>
         </ul>
@@ -21,7 +23,11 @@
                 </form>
             </li>
             <li class="menu">
-                <a class="fa-bars" href="#menu">Menu</a>
+                {% if session["privilege"] == "admin" %}
+                <a class="fa-user" href="#menu" style="color: #c72917;">Menu</a>
+                {% else %}
+                <a class="fa-user" href="#menu">Menu</a>
+                {% endif %}
             </li>
         </ul>
     </nav>

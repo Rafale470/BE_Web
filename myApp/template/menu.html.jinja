@@ -1,5 +1,6 @@
 <section id="menu">
 
+
     <!-- Search -->
         <section>
             <form class="search" method="get" action="#">
@@ -8,31 +9,11 @@
         </section>
 
     <!-- Links -->
+    
         <section>
             <ul class="links">
                 <li>
-                    <a href="#">
-                        <h3>Lorem ipsum</h3>
-                        <p>Feugiat tempus veroeros dolor</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <h3>Dolor sit amet</h3>
-                        <p>Sed vitae justo condimentum</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <h3>Feugiat veroeros</h3>
-                        <p>Phasellus sed ultricies mi congue</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <h3>Etiam sed consequat</h3>
-                        <p>Porta lectus amet ultricies</p>
-                    </a>
+                        {% include "compte.html.jinja" %}
                 </li>
             </ul>
         </section>
@@ -41,11 +22,16 @@
         <section>
             {% if session["logged"] %}
             <ul class="actions stacked">
-                <li><a href="logout" class="button large fit">Log Out</a></li>
+                <li><a href="/mon_compte" class="button large fit">Paramètres</a></li>
             </ul>
+            <ul class="actions stacked">
+                <li>
+                  <a href="logout" class="button large fit">Se déconnecter</a>
+                </li>
+              </ul>
             {% else %}
             <ul class="actions stacked">
-                <li><a href="login" class="button large fit">Log In</a></li>
+                <li><a href="login" class="button large fit">Se connecter</a></li>
             </ul>
             <ul class="actions stacked">
                 <li>

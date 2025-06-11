@@ -1,0 +1,84 @@
+{% include "script.html.jinja" %}
+{% include "head.html.jinja" %}
+{% include "header.html.jinja" %}
+
+<div class="container mt-5">
+
+  <h1>Gestion utilisateur des thèmes réglementaires</h1>
+
+  {# ─── Messages flash ─────────────────────────────────────────── #}
+  {% if message %}
+    <div class="alert alert-{{ category }}">
+      {{ message }}
+    </div>
+  {% endif %}
+
+  {# ─── Filtre / recherche dans tous les thèmes ───────────────── #}
+  <form method="post" class="mb-4 d-flex align-items-center">
+    <input
+      type="text"
+      name="search_term"
+      placeholder="Rechercher un thème…"
+      value="{{ search or '' }}"
+      class="form-control me-2"
+      style="max-width:300px;"
+    >
+    <button type="submit" name="search" class="btn btn-primary">
+      Filtrer
+    </button>
+  </form>
+
+  {# ─── Tableau des thèmes ─────────────────────────────────────── #}
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:700px;">Action</th>
+        <th>Nom</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if themes %}
+        {% for theme in themes %}
+          <tr>
+            {# ── Colonne Action : + ou Corbeille selon la préférence ── #}
+            <td>
+              {% if theme.theme_id in user_theme_ids %}
+                {# --------- Retirer la préférence --------- #}
+                <form method="post" class="d-inline">
+                  <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
+                  <button type="submit"
+                          name="user_delete"
+                          class="btn btn-link p-0"
+                          title="Retirer de mes thèmes"
+                          onclick="return confirm('Retirer ce thème ?');">
+                    <i class="fa-solid fa-trash-can text-danger"></i>
+                  </button>
+                </form>
+              {% else %}
+                {# --------- Ajouter la préférence --------- #}
+                <form method="post" class="d-inline">
+                  <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
+                  <button type="submit"
+                          name="user_add"
+                          class="btn btn-link p-0"
+                          title="Ajouter à mes thèmes">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                  </button>
+                </form>
+              {% endif %}
+            </td>
+
+            {# ── Nom + Eurovoc ID ── #}
+            <td>{{ theme.nom }}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="3">Aucun thème trouvé.</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+</div>
+

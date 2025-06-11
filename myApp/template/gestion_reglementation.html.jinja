@@ -1,0 +1,122 @@
+{% include "script.html.jinja" %}
+{% include "head.html.jinja" %}
+{% include "header.html.jinja" %}
+
+<div class="container mt-5">
+
+  <h1>Gestion des thèmes réglementaires</h1>
+
+  {% if message %}
+    <div class="alert alert-{{ category }}">
+      {{ message }}
+    </div>
+  {% endif %}
+
+  <form method="post" class="mb-4 d-flex align-items-center">
+    <input
+      type="text"
+      name="search_term"
+      placeholder="Rechercher un thème…"
+      value="{{ search or '' }}"
+      class="form-control me-2"
+      style="max-width:300px;"
+    >
+    <button type="submit" name="search" class="btn btn-primary">Filtrer</button>
+  </form>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Supp</th>
+        <th>Nom</th>
+        <th>Eurvoc</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if themes %}
+        {% for theme in themes %}
+          <tr>
+            <td>
+              <form method="post" class="d-inline">
+                <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
+                <button
+                  type="submit"
+                  name="delete"
+                  class="btn btn-link p-0"
+                  onclick="return confirm('Supprimer ce thème ?');"
+                >
+                  <i class="fa-solid fa-trash-can text-danger"></i>
+                </button>
+              </form>
+            </td>
+            <td>{{ theme.nom }}</td>
+            <td>{{ theme.eurvoc_name }}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="3">Aucun thème trouvé.</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+
+<h2>Ajouter un thème depuis Eurovoc</h2>
+<form method="post" class="position-relative" style="max-width:400px;">
+  <label for="eurovoc">Thème Eurovoc :</label>
+  <input type="text"
+         id="eurovoc"
+         name="eurovoc"          {# ← label du thème #}
+         autocomplete="off"
+         required
+         class="form-control">
+  <input type="hidden"
+         id="eurovoc_uri"
+         name="eurovoc_uri">    
+
+  <div id="suggestions"
+       style="border:1px solid #ccc; display:none;
+              position:absolute; background:white; z-index:10;
+              max-height:200px; overflow-y:auto; width:100%;">
+  </div>
+
+  <button type="submit" name="add" class="btn btn-success mt-2">Ajouter</button>
+</form>
+
+<script>
+  const input       = document.getElementById('eurovoc');
+  const suggestions = document.getElementById('suggestions');
+  const hiddenUri   = document.getElementById('eurovoc_uri');
+
+  input.addEventListener('input', () => {
+    const q = input.value;
+    if (q.length < 2) { suggestions.style.display = 'none'; return; }
+
+    fetch('/ajax/eurovoc_suggest?q=' + encodeURIComponent(q))
+      .then(r => r.json())
+      .then(data => {
+        suggestions.innerHTML = '';
+        if (!data.length) { suggestions.style.display = 'none'; return; }
+
+        data.forEach(item => {
+          const div = document.createElement('div');
+          div.textContent = item.label;
+          div.style.cursor = 'pointer';
+          div.onclick = () => {
+            input.value    = item.label;   
+            hiddenUri.value = item.uri;     
+            suggestions.style.display = 'none';
+          };
+          suggestions.appendChild(div);
+        });
+        suggestions.style.display = 'block';
+      });
+  });
+
+  document.addEventListener('click', e => {
+    if (!suggestions.contains(e.target) && e.target !== input) {
+      suggestions.style.display = 'none';
+    }
+  });
+</script>

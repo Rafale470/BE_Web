@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<!--
+	Future Imperfect by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+{% include("info.html.jinja") %}
+{% include("head.html.jinja") %}
+
+<body class="is-preload">
+
+  <!-- Wrapper -->
+  <div id="wrapper">
+
+    <!-- Header -->
+    {% include("header.html.jinja") %}
+
+    <!-- Menu -->
+    {% include("menu.html.jinja") %}
+
+    <!-- Main -->
+    <div id="main">
+    {% block content %}{% endblock %}
+    </div>
+  </div>
+  {% include("script.html.jinja") %}
+  {% include("footer.html.jinja") %}
+</body>
+</html>

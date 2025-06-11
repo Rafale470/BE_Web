@@ -1,0 +1,30 @@
+{% if user %}
+<div class="container my-4">
+  <div class="card mx-auto" style="max-width: 500px;">
+    <div class="card-header" style="background-color: #f5f0e6; color: #4e342e;">
+      {% if session["privilege"] == "admin" %}
+      <h5 class="mb-0">Mon compte <span style="color: #c0392b;">administrateur</span></h5>
+      {% else %}
+      <h5 class="mb-0">Mon compte</h5>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <p><strong>Identifiant :</strong> {{ user.username }}</p>
+      <p><strong>Nom :</strong> {{ user.nom }}</p>
+      <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+      <p><strong>E-mail :</strong> {{ user.email }}</p>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="container my-5">
+  <div class="card text-center mx-auto shadow-sm border-0" style="max-width: 500px">
+    <div class="card-body py-4">
+      <h5 class="card-title" style="color: #5a3825;">Bienvenue 👋</h5>
+      <p class="card-text text-muted">
+        Vous n’êtes pas connecté. Connectez-vous pour accéder à votre profil pour modifier vos préférences et informations personnelles.
+      </p>
+    </div>
+  </div>
+</div>
+{% endif %}

@@ -3609,3 +3609,110 @@ input, select, textarea {
 			}
 
 		}
+
+.post.compact header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap; 
+}
+
+.post.compact header .title {
+    flex: 1 1 auto;
+    padding-right: 2em;
+}
+
+.post.compact header .title h2 {
+    font-size: 1.2em;
+    margin-bottom: 0.4em;
+}
+
+.post.compact header .title p {
+    font-size: 0.95em;
+    margin: 0;
+    color: #777;
+}
+
+.post.compact header .meta {
+    min-width: 15em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+
+.post.compact header .meta p {
+    font-size: 0.9em;
+    margin: 0.3em 0;
+}
+
+.post.compact .content p {
+    font-size: 0.9em;
+    margin: 0.3em 0;
+}
+
+.post.compact header {
+    padding: 1.5em 1.5em 1em 1.5em;
+}
+
+.post.compact header .title {
+    padding: 0;
+}
+
+.post.compact header .title h2 {
+    font-size: 1.2em;
+    margin-bottom: 0.2em;
+}
+
+.post.compact header .title p {
+    font-size: 0.95em;
+    margin: 0.2em 0;
+    color: #777;
+}
+
+.post.compact header .meta {
+    min-width: 15em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0;
+}
+
+.post.compact header .meta p {
+    font-size: 0.9em;
+    margin: 0.2em 0;
+}
+
+.post.compact .content p {
+    font-size: 0.9em;
+    margin: 0.2em 0;
+}
+
+.post.compact {
+    border-radius: 12px; /* Coins arrondis */
+    margin: 1.5em 2em; /* Marge verticale et latérale */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* (optionnel) une ombre légère pour un effet carte */
+    border: 1px solid rgba(160, 160, 160, 0.3); /* garde le style original */
+}
+
+.main-title {
+    text-align: center;
+    margin-top: 2em;  /* espace depuis le haut */
+    margin-bottom: 2em; /* espace avant la liste */
+    font-size: 2em;
+    letter-spacing: 0.05em;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #3c3b3b;
+}
+
+.preferences-button {
+    text-align: center;
+    margin: 2em 0;
+}
+
+

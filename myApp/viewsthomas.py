@@ -197,7 +197,7 @@ def view2(app) :
                     request.form['email'].strip()
                 )
                 session['message']  = "Profil mis à jour."
-                session['category'] = 'success'
+                session['category'] = 'danger'
                 return redirect(url_for('mon_compte'))
 
             # 2) Mot de passe

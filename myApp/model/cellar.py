@@ -53,6 +53,113 @@ def get_eurovoc_themes(name='aviation'):
     else:
         return {}
 
+def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
+    """
+    Récupère les détails des works liés à un concept Eurovoc donné (par son URI).
+    :param eurovoc_uri: URI Eurovoc (ex: 'http://eurovoc.europa.eu/4505')
+    :return: Liste de dictionnaires avec les infos détaillées sur chaque work.
+    """
+    query = f"""
+    PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    SELECT ?s ?eurovoc ?label ?type ?exp ?title (str(?force) as ?force) 
+           (group_concat(str(?date_if);separator=";") as ?dates_if)
+           (group_concat(str(?date_ev);separator=";") as ?dates_ev)
+           (str(?celex) as ?celex)
+           (group_concat(str(?psi);separator=";") as ?psis)
+    WHERE {{
+      <{eurovoc_uri}> skos:narrower* ?eurovoc.
+      ?s cdm:work_is_about_concept_eurovoc ?eurovoc.
+      ?s cdm:work_has_resource-type ?type.
+      OPTIONAL {{ ?s cdm:resource_legal_in-force ?force. }}
+      OPTIONAL {{ ?s cdm:resource_legal_date_entry-into-force ?date_if. }}
+      OPTIONAL {{ ?s cdm:resource_legal_date_end-of-validity ?date_ev. }}
+      OPTIONAL {{ ?s cdm:resource_legal_id_celex ?celex. }}
+      ?s owl:sameAs ?psi.
+      FILTER NOT EXISTS {{ ?s a cdm:publication_general }}
+      FILTER NOT EXISTS {{
+        ?s cdm:resource_legal_id_sector ?sector.
+        FILTER(str(?sector) in ('C','6','7','8','9'))
+      }}
+      ?eurovoc skos:prefLabel ?label.
+      FILTER(lang(?label)='fr')
+      ?exp cdm:expression_belongs_to_work ?s.
+      ?exp cdm:expression_uses_language <http://publications.europa.eu/resource/authority/language/FRA>.
+      ?exp cdm:expression_title ?title.
+    }}
+    ORDER BY ?eurovoc ?s ?celex
+    LIMIT {limit}
+    """
+
+    results = get_cellar_data(query)
+    works = []
+    if results:
+        for result in results['results']['bindings']:
+            works.append({
+                'work_uri': result['s']['value'],
+                'eurovoc_uri': result['eurovoc']['value'],
+                'eurovoc_label': result['label']['value'],
+                'type': result.get('type', {}).get('value', ''),
+                'expression': result.get('exp', {}).get('value', ''),
+                'title': result.get('title', {}).get('value', ''),
+                'force': result.get('force', {}).get('value', ''),
+                'dates_if': result.get('dates_if', {}).get('value', ''),
+                'dates_ev': result.get('dates_ev', {}).get('value', ''),
+                'celex': result.get('celex', {}).get('value', ''),
+                'psis': result.get('psis', {}).get('value', ''),
+            })
+    return works
+
+def get_work_by_uri(work_uri):
+    """
+    Récupère les détails d'un work spécifique par son URI.
+    
+    :param work_uri: URI du work (ex: 'http://data.europa.eu/eli/act/2016/679/oj')
+    :return: Dictionnaire avec les infos détaillées sur le work.
+    """
+    query = f"""
+        prefix cdm: <http://publications.europa.eu/ontology/cdm#> 
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+        select DISTINCT group_concat(str(?eurovoc);separator=";") as ?psis ?type ?exp ?title (str(?force) as ?force)
+                    ?date_if
+                    ?date_ev
+                    group_concat(str(?celex); separator=";") as ?celex
+                    group_concat(str(?psi); separator=";") as ?psi where {{
+                        <{work_uri}> cdm:work_is_about_concept_eurovoc ?eurovoc.
+                        OPTIONAL {{ <{work_uri}> cdm:work_has_resource-type ?type. }}
+                        OPTIONAL {{ <{work_uri}> cdm:resource_legal_in-force ?force. }}
+                        OPTIONAL {{ <{work_uri}> cdm:resource_legal_date_entry-into-force ?date_if. }}
+                        OPTIONAL {{ <{work_uri}> cdm:resource_legal_date_end-of-validity ?date_ev. }}
+                        OPTIONAL {{ <{work_uri}> cdm:resource_legal_id_celex ?celex. }}
+                        OPTIONAL {{ <{work_uri}> owl:sameAs ?psi. }}
+                        OPTIONAL {{
+                                    ?exp cdm:expression_belongs_to_work <{work_uri}>.
+                                    ?exp cdm:expression_uses_language <{work_uri}>.
+                                    OPTIONAL {{ ?exp cdm:expression_title ?title. }}
+                }}
+        }} limit 100
+    """
+
+    results = get_cellar_data(query)
+    if results and results['results']['bindings']:
+        result = results['results']['bindings'][0]
+        return {
+            'work_uri': work_uri,
+            'psis': result.get('psis', {}).get('value', ''),
+            'type': result.get('type', {}).get('value', ''),
+            'expression': result.get('exp', {}).get('value', ''),
+            'title': result.get('title', {}).get('value', ''),
+            'force': result.get('force', {}).get('value', ''),
+            'date_if': result.get('date_if', {}).get('value', ''),
+            'date_ev': result.get('date_ev', {}).get('value', ''),
+            'celex': result.get('celex', {}).get('value', ''),
+            'psi': result.get('psi', {}).get('value', ''),
+        }
+    
+    return None
 
 def get_works_by_eurovoc_uri(eurovoc_uri, limit=15):
     """

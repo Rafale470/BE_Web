@@ -11,26 +11,21 @@
       <th>Mail</th>
       <th>Login</th>
       <th>Statut</th>
-      <th>Préférences</th>          {# déjà ajouté #}
+      <th>Préférences</th>         
       <th>Ajouter préférence</th>
-      <th>Favoris</th>    {# NOUVELLE colonne #}
+      <th>Favoris</th>   
     </tr>
   </thead>
 
   <tbody>
   {% for user in liste %}
     <tr>
-      <!-- Supp utilisateur -->
       <td><a href="/suppMembre/{{ user.user_id }}"><i class="fa-solid fa-trash-can text-danger"></i></a></td>
-
-      <!-- Infos -->
       <td>{{ user.nom }}</td>
       <td>{{ user.prenom }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.username }}</td>
       <td>{{ 'Administrateur' if user.privilege == 'admin' else 'Utilisateur' }}</td>
-
-      <!-- Préférences existantes -->
       <td>
         {% set prefs = preferences_by_user.get(user.user_id, []) %}
         {% if prefs %}
@@ -50,8 +45,6 @@
           <em>Aucune</em>
         {% endif %}
       </td>
-
-      <!-- Ajouter une préférence -->
       <td>
         <form method="post" class="d-flex align-items-center">
           <input type="hidden" name="user_id" value="{{ user.user_id }}">
@@ -65,7 +58,6 @@
           </button>
         </form>
       </td>
-      <!-- Favoris -->
       <td>
         {% set favs = favoris_by_user.get(user.user_id, []) %}
         {% if favs %}

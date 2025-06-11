@@ -58,8 +58,6 @@ def view2(app) :
     def sgbd():
         if session.get("privilege") != "admin":
             return redirect("/index")
-
-        # ---------- actions POST ----------
         if request.method == 'POST':
             user_id  = request.form['user_id']
             if 'delete_pref' in request.form:
@@ -70,23 +68,22 @@ def view2(app) :
                 add_user_theme(user_id, request.form['theme_id'])
                 session["infoVert"] = "Préférence ajoutée"
 
-            elif 'delete_fav' in request.form:          # nouveau
+            elif 'delete_fav' in request.form:          
                 delete_user_favori(user_id, request.form['cellar_id'])
                 session["infoVert"] = "Favori supprimé"
 
             return redirect(url_for('sgbd'))
 
-        # ---------- données affichage ----------
         users        = get_membresData()
-        prefs_by_id  = get_prefs_by_user()     # { user_id: [ {theme_id, nom}, … ] }
-        fav_by_id    = get_favoris_by_user()   # { user_id: [ {cellar_id, nom}, … ] }
+        prefs_by_id  = get_prefs_by_user()     
+        fav_by_id    = get_favoris_by_user()   
         all_themes   = get_all_themes()
 
         return render_template(
             "sgbd.html.jinja",
             liste=users,
             preferences_by_user=prefs_by_id,
-            favoris_by_user=fav_by_id,          # ← envoyé au template
+            favoris_by_user=fav_by_id,          
             all_themes=all_themes
         )
         
@@ -141,17 +138,12 @@ def view2(app) :
             
     @app.route('/gestion_user_reglementation', methods=['GET', 'POST'])
     def gestion_user_reglementation():
-        # ── sécurité : utilisateur connecté ───────────────────────────
         user_id = session.get('user_id')
         if not user_id:
             return redirect(url_for('login'))
-
-        # ── messages flash ────────────────────────────────────────────
         message  = session.pop('message', None)
         category = session.pop('category', None)
         search   = None
-
-        # ── POST : filtrer / ajouter / retirer ────────────────────────
         if request.method == 'POST':
             if 'search' in request.form:
                 search = request.form.get('search_term','').strip()
@@ -169,9 +161,7 @@ def view2(app) :
                 session['message']  = "Thème retiré de vos préférences."
                 session['category'] = 'success'
                 return redirect(url_for('gestion_user_reglementation'))
-
-        # ── données pour l’affichage ──────────────────────────────────
-        themes           = get_themes(search)            # tous les thèmes (avec filtre)
+        themes           = get_themes(search)            
         user_theme_ids   = set(get_user_theme_ids(user_id))
 
         return render_template(
@@ -193,10 +183,8 @@ def view2(app) :
         category = session.pop('category', None)
         user     = get_user_by_id(user_id)
 
-        # ───── POST : deux formulaires distincts ─────────────────────
         if request.method == 'POST':
 
-            # 1) Infos générales
             if 'update_info' in request.form:
                 update_user_info(
                     user_id,
@@ -209,14 +197,12 @@ def view2(app) :
                 session['category'] = 'danger'
                 return redirect(url_for('mon_compte'))
 
-            # 2) Mot de passe
             elif 'update_pass' in request.form:
                 if request.form['new_password'] != request.form['confirm_password']:
                     session['message']  = "Les deux mots de passe ne correspondent pas."
                     session['category'] = 'danger'
                     return redirect(url_for('mon_compte'))
 
-                # Vérifie l'ancien mot de passe
                 old_hash = hashlib.sha256(
                     request.form['old_password'].encode()).hexdigest()
                 if old_hash != user['password']:
@@ -224,7 +210,6 @@ def view2(app) :
                     session['category'] = 'danger'
                     return redirect(url_for('mon_compte'))
 
-                # Hash du nouveau mot de passe
                 new_hash = hashlib.sha256(
                     request.form['new_password'].encode()).hexdigest()
                 change_user_password(user_id, new_hash)
@@ -232,14 +217,12 @@ def view2(app) :
                 session['message']  = "Mot de passe changé."
                 session['category'] = 'success'
                 return redirect(url_for('mon_compte'))
-            #######################################################
-        # ── messages flash ────────────────────────────────────────────
+
         message  = session.pop('message', None)
         category = session.pop('category', None)
         search   = None
 
-        # ── données pour l’affichage ──────────────────────────────────
-        themes           = get_themes(search)            # tous les thèmes (avec filtre)
+        themes           = get_themes(search)           
         user_theme_ids   = set(get_user_theme_ids(user_id))
 
         return render_template(
@@ -250,13 +233,7 @@ def view2(app) :
             category=category,
             search=search
         )
-
-        # ───── GET : affiche la page ─────────────────────────────────
-        print(f"{user}")
-        return render_template("Ma_page.html.jinja", user=user, message=message,category= category)
     
-    
-    #permet d'avoir user à dispo dans tous les templates
     @app.before_request
     def load_current_user():
         """Charge l’utilisateur courant à chaque requête s’il est connecté."""

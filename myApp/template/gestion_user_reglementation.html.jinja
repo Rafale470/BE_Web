@@ -6,14 +6,12 @@
 
   <h1>Gestion utilisateur des thèmes réglementaires</h1>
 
-  {# ─── Messages flash ─────────────────────────────────────────── #}
   {% if message %}
     <div class="alert alert-{{ category }}">
       {{ message }}
     </div>
   {% endif %}
 
-  {# ─── Filtre / recherche dans tous les thèmes ───────────────── #}
   <form method="post" class="mb-4 d-flex align-items-center">
     <input
       type="text"
@@ -28,7 +26,6 @@
     </button>
   </form>
 
-  {# ─── Tableau des thèmes ─────────────────────────────────────── #}
   <table class="table">
     <thead>
       <tr>
@@ -40,10 +37,8 @@
       {% if themes %}
         {% for theme in themes %}
           <tr>
-            {# ── Colonne Action : + ou Corbeille selon la préférence ── #}
             <td>
               {% if theme.theme_id in user_theme_ids %}
-                {# --------- Retirer la préférence --------- #}
                 <form method="post" class="d-inline">
                   <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
                   <button type="submit"
@@ -55,7 +50,6 @@
                   </button>
                 </form>
               {% else %}
-                {# --------- Ajouter la préférence --------- #}
                 <form method="post" class="d-inline">
                   <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
                   <button type="submit"
@@ -67,8 +61,6 @@
                 </form>
               {% endif %}
             </td>
-
-            {# ── Nom + Eurovoc ID ── #}
             <td>{{ theme.nom }}</td>
           </tr>
         {% endfor %}

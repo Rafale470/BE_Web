@@ -130,12 +130,12 @@ def get_work_by_uri(work_uri):
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
         PREFIX owl: <http://www.w3.org/2002/07/owl#>
 
-        select DISTINCT group_concat(str(?eurovoc);separator=";") as ?psis ?type ?exp ?title (str(?force) as ?force) ?date_document
+        select DISTINCT group_concat(DISTINCT str(?eurovoc);separator=";") as ?psis ?type ?exp ?title (str(?force) as ?force) ?date_document
                     ?date_if
                     ?date_ev
-                    group_concat(str(?label); separator=";") as ?label
-                    group_concat(str(?celex); separator=";") as ?celex
-                    group_concat(str(?psi); separator=";") as ?psi where {{
+                    group_concat(DISTINCT str(?label); separator=";") as ?label
+                    group_concat(DISTINCT str(?celex); separator=";") as ?celex
+                    group_concat(DISTINCT str(?psi); separator=";") as ?psi where {{
                         <{work_uri}> cdm:work_is_about_concept_eurovoc ?eurovoc.
                         OPTIONAL {{ <{work_uri}> cdm:work_has_resource-type ?type. }}
                         OPTIONAL {{ <{work_uri}> cdm:resource_legal_in-force ?force. }}

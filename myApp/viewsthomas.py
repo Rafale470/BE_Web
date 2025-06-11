@@ -16,6 +16,8 @@ from .model.bddthomas import update_user_info
 from .model.bddthomas import change_user_password
 from .model.bddthomas import get_prefs_by_user
 from .model.bddthomas import get_all_themes
+from .model.bddthomas import get_favoris_by_user
+from .model.bddthomas import delete_user_favori
 import pandas, os
 from .controller.function import messageInfo
 from .model.bdd import exist
@@ -52,34 +54,41 @@ def view2(app) :
     def test():
         return render_template("index.html.jinja")
 
-    @app.route("/sgbd", methods=['GET', 'POST'])   
+    @app.route("/sgbd", methods=['GET', 'POST'])
     def sgbd():
         if session.get("privilege") != "admin":
             return redirect("/index")
 
-        # ---------- Actions POST ----------
+        # ---------- actions POST ----------
         if request.method == 'POST':
             user_id  = request.form['user_id']
             if 'delete_pref' in request.form:
                 delete_user_theme(user_id, request.form['theme_id'])
-                session["infoVert"]="Préférence supprimée"
+                session["infoVert"] = "Préférence supprimée"
+
             elif 'add_pref' in request.form:
                 add_user_theme(user_id, request.form['theme_id'])
-                session["infoVert"]="Préférence ajoutée"
+                session["infoVert"] = "Préférence ajoutée"
+
+            elif 'delete_fav' in request.form:          # nouveau
+                delete_user_favori(user_id, request.form['cellar_id'])
+                session["infoVert"] = "Favori supprimé"
+
             return redirect(url_for('sgbd'))
 
-        # ---------- Données d’affichage ----------
-        users       = get_membresData()
-        prefs_by_id = get_prefs_by_user()
-        all_themes  = get_all_themes()         # pour les menus “Ajouter”
-        print(prefs_by_id)
-        print(all_themes)
-        
+        # ---------- données affichage ----------
+        users        = get_membresData()
+        prefs_by_id  = get_prefs_by_user()     # { user_id: [ {theme_id, nom}, … ] }
+        fav_by_id    = get_favoris_by_user()   # { user_id: [ {cellar_id, nom}, … ] }
+        all_themes   = get_all_themes()
 
-        return render_template("sgbd.html.jinja",
-                            liste=users,
-                            preferences_by_user=prefs_by_id,
-                            all_themes=all_themes)
+        return render_template(
+            "sgbd.html.jinja",
+            liste=users,
+            preferences_by_user=prefs_by_id,
+            favoris_by_user=fav_by_id,          # ← envoyé au template
+            all_themes=all_themes
+        )
         
     @app.route("/suppMembre/<user_id>")
     def suppMembre(user_id=""):

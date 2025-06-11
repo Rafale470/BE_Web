@@ -59,10 +59,12 @@ def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
     :param eurovoc_uri: URI Eurovoc (ex: 'http://eurovoc.europa.eu/4505')
     :return: Liste de dictionnaires avec les infos détaillées sur chaque work.
     """
+    uris_str = " ".join(f"<{uri}>" for uri in eurovoc_uri)
     query = f"""
     PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
     PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
     PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
     SELECT ?s ?eurovoc ?label ?type ?exp ?title (str(?force) as ?force) 
            (group_concat(DISTINCT str(?date_if);separator=";") as ?dates_if)
            (group_concat(DISTINCT str(?date_ev);separator=";") as ?dates_ev)
@@ -70,7 +72,8 @@ def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
            (group_concat(DISTINCT str(?psi);separator=";") as ?psis)
            ?date_document
     WHERE {{
-      <{eurovoc_uri}> skos:narrower* ?eurovoc.
+      VALUES ?eurovoc_uri {{ {uris_str} }}
+      ?eurovoc_uri skos:narrower* ?eurovoc.
       ?s cdm:work_is_about_concept_eurovoc ?eurovoc.
       ?s cdm:work_has_resource-type ?t.
       

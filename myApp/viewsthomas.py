@@ -223,6 +223,24 @@ def view2(app) :
                 session['message']  = "Mot de passe changé."
                 session['category'] = 'success'
                 return redirect(url_for('mon_compte'))
+            #######################################################
+        # ── messages flash ────────────────────────────────────────────
+        message  = session.pop('message', None)
+        category = session.pop('category', None)
+        search   = None
+
+        # ── données pour l’affichage ──────────────────────────────────
+        themes           = get_themes(search)            # tous les thèmes (avec filtre)
+        user_theme_ids   = set(get_user_theme_ids(user_id))
+
+        return render_template(
+            'Ma_page.html.jinja',
+            themes=themes,
+            user_theme_ids=user_theme_ids,
+            message=message,
+            category=category,
+            search=search
+        )
 
         # ───── GET : affiche la page ─────────────────────────────────
         print(f"{user}")

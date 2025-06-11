@@ -16,24 +16,28 @@
     <header>
         <div class="title">
             <h2>
-                <a href="{{ url_for('document', numero_celex=resultat['numero_celex']) }}">
-                    {{ resultat['titre'] }}
+                <a href="{{ url_for('eurlex_document', celex=resultat['celex']) }}">
+                    {{ resultat['title'] }}
                 </a>
             </h2>
-            <p>Descripteur : {{ resultat['descripteur_eurovoc'] or "Non renseigné" }}</p>
+            <p>Descripteur : {{ resultat['eurovocs'] or "Non renseigné" }}</p>
         </div>
         <div class="meta">
             <p><strong>Date :</strong> {{ resultat['date_document'] }}</p>
-            <p><strong>Forme :</strong> {{ resultat['forme'] }}</p>
+            <p><strong>Forme :</strong> {{ resultat['type'] }}</p>
         </div>
     </header>
 
     <div class="content">
-        <p><strong>Numéro CELEX :</strong> {{ resultat['numero_celex'] }}</p>
-        <p><strong>Base juridique :</strong> {{ resultat['base_juridique'] or "Non renseigné" }}</p>
-        <p><strong>Code répertoire :</strong> {{ resultat['code_repertoire'] or "Non renseigné" }}</p>
-        {% if resultat['en_vigueur'] %}
-            <p><strong>En vigueur :</strong> {{ resultat['en_vigueur'] }}</p>
+        <p><strong>Numéro CELEX :</strong> {{ resultat['celex'] }}</p>
+        {% if resultat['dates_if'] %}
+        <p><strong>Date de prise d'effet :</strong> {{ resultat['dates_if'] or "Non renseigné" }}</p>
+        {% endif %}
+        {% if resultat['dates_if'] %}
+        <p><strong>Date de fin de validité :</strong> {{ resultat['dates_ev'] or "Non renseigné" }}</p>
+        {% endif %}
+        {% if resultat['force'] %}
+            <p><strong>En vigueur :</strong> {{ resultat['force'] }}</p>
         {% endif %}
     </div>
 </article>

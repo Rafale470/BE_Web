@@ -1,25 +1,7 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ document.titre }}</title>
-</head>
-<body>
-    <h1>{{ document.titre }}</h1>
+{% extends "base.html.jinja" %}
 
-    <ul>
-        <li>Numéro Celex: {{ document.numero_celex }}</li>
-        <li>Forme: {{ document.forme }}</li>
-        <li>Descripteur EUROVOC: {{ document.descripteur_eurovoc }}</li>
-        <li>Code répertoire: {{ document.code_repertoire or 'Non renseigné' }}</li>
-        <li>Base juridique: {{ document.base_juridique or 'Non renseigné' }}</li>
-        <li>Date du document: {{ document.date_document }}</li>
-        <li>En vigueur: {{ document.en_vigueur or 'Non renseigné' }}</li>
-        <li>Date de prise d'effet: {{ document.date_prise_effet or 'Non renseigné' }}</li>
-        <li>Date de fin de validité: {{ document.date_fin_validite or 'Non renseigné' }}</li>
-    </ul>
+{% block content %}
 
-    <p><a href="{{ document.lien_eli }}" target="_blank">Voir le document officiel</a></p>
-    <p><a href="{{ url_for('recherche') }}">Retour aux résultats</a></p>
-</body>
-</html>
+<div>{{ content|safe }}</div>
+
+{% endblock %}

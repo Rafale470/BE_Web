@@ -133,6 +133,7 @@ def get_work_by_uri(work_uri):
         select DISTINCT group_concat(str(?eurovoc);separator=";") as ?psis ?type ?exp ?title (str(?force) as ?force) ?date_document
                     ?date_if
                     ?date_ev
+                    group_concat(str(?label); separator=";") as ?label
                     group_concat(str(?celex); separator=";") as ?celex
                     group_concat(str(?psi); separator=";") as ?psi where {{
                         <{work_uri}> cdm:work_is_about_concept_eurovoc ?eurovoc.
@@ -148,6 +149,8 @@ def get_work_by_uri(work_uri):
                                     ?exp cdm:expression_uses_language <{work_uri}>.
                                     OPTIONAL {{ ?exp cdm:expression_title ?title. }}
                 }}
+                ?eurovoc skos:prefLabel ?label.
+                FILTER(lang(?label)='fr')
         }} limit 100
     """
 
@@ -165,7 +168,8 @@ def get_work_by_uri(work_uri):
             'date_ev': result.get('date_ev', {}).get('value', ''),
             'celex': result.get('celex', {}).get('value', ''),
             'psi': result.get('psi', {}).get('value', ''),
-            'date_document': result.get('date_document', {}).get('value', 'N/A')
+            'date_document': result.get('date_document', {}).get('value', 'N/A'),
+            'eurovocs': result.get('label', {}).get('value', ''),
         }
     
     return None

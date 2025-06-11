@@ -12,7 +12,8 @@
       <th>Login</th>
       <th>Statut</th>
       <th>Préférences</th>          {# déjà ajouté #}
-      <th>Ajouter préférence</th>   {# NOUVELLE colonne #}
+      <th>Ajouter préférence</th>
+      <th>Favoris</th>    {# NOUVELLE colonne #}
     </tr>
   </thead>
 
@@ -64,6 +65,33 @@
           </button>
         </form>
       </td>
+      <!-- Favoris -->
+      <td>
+        {% set favs = favoris_by_user.get(user.user_id, []) %}
+        {% if favs %}
+          <form method="post" class="d-flex align-items-center">
+            <input type="hidden" name="user_id" value="{{ user.user_id }}">
+
+            <select name="cellar_id"
+                    class="form-select me-2"
+                    style="max-width:220px;">
+              {% for f in favs %}
+                <option value="{{ f.cellar_id }}">{{ f.nom }}</option>
+              {% endfor %}
+            </select>
+
+            <button type="submit" name="delete_fav"
+                    class="btn btn-link p-0"
+                    title="Supprimer ce favori"
+                    onclick="return confirm('Supprimer ce favori ?');">
+              <i class="fa-solid fa-trash-can text-danger"></i>
+            </button>
+          </form>
+        {% else %}
+          <em>Aucun</em>
+        {% endif %}
+      </td>
+
     </tr>
   {% endfor %}
   </tbody>

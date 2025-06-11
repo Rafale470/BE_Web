@@ -197,3 +197,36 @@ def get_all_themes():
     rows = cur.fetchall()
     cur.close(); cnx.close()
     return rows
+
+def get_favoris_by_user():
+    """
+    Renvoie { user_id: [ {cellar_id, nom}, … ] } pour remplir la colonne Favoris.
+    """
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return {}
+
+    cur = cnx.cursor(dictionary=True)
+    cur.execute("""
+        SELECT user_id, cellar_id, nom
+        FROM Favoris
+        ORDER BY nom;
+    """)
+    favs = {}
+    for row in cur.fetchall():
+        favs.setdefault(row["user_id"], []).append(
+            {"cellar_id": row["cellar_id"], "nom": row["nom"]}
+        )
+    cur.close(); cnx.close()
+    return favs
+
+
+def delete_user_favori(user_id, cellar_id):
+    cnx = bddGen.connexion()
+    if cnx is None:
+        return
+    sql = "DELETE FROM Favoris WHERE user_id=%s AND cellar_id=%s;"
+    bddGen.deleteData(cnx, sql, (user_id, cellar_id),
+                      {"success": "delFavOK",
+                       "error":   "Failed delete favori"})
+    cnx.close()

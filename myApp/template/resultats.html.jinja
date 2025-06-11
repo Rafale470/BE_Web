@@ -1,0 +1,47 @@
+{% include "head.html.jinja" %}
+{% include "header.html.jinja" %}
+{% include "menu.html.jinja" %}
+
+<div id="main">
+    <h1 class="main-title">Votre feed d'actualité base sur vos préférences</h1>
+
+<div class="preferences-button">
+    <a href="/gestion_user_reglementation" class="button">Accéder à mes préférences</a>
+</div>
+
+    {% if resultats %}
+        {% for resultat in resultats %}
+            <!-- Post -->
+            <article class="post compact">
+    <header>
+        <div class="title">
+            <h2>
+                <a href="{{ url_for('document', numero_celex=resultat['numero_celex']) }}">
+                    {{ resultat['titre'] }}
+                </a>
+            </h2>
+            <p>Descripteur : {{ resultat['descripteur_eurovoc'] or "Non renseigné" }}</p>
+        </div>
+        <div class="meta">
+            <p><strong>Date :</strong> {{ resultat['date_document'] }}</p>
+            <p><strong>Forme :</strong> {{ resultat['forme'] }}</p>
+        </div>
+    </header>
+
+    <div class="content">
+        <p><strong>Numéro CELEX :</strong> {{ resultat['numero_celex'] }}</p>
+        <p><strong>Base juridique :</strong> {{ resultat['base_juridique'] or "Non renseigné" }}</p>
+        <p><strong>Code répertoire :</strong> {{ resultat['code_repertoire'] or "Non renseigné" }}</p>
+        {% if resultat['en_vigueur'] %}
+            <p><strong>En vigueur :</strong> {{ resultat['en_vigueur'] }}</p>
+        {% endif %}
+    </div>
+</article>
+        {% endfor %}
+    {% else %}
+        <p>Aucun résultat trouvé.</p>
+    {% endif %}
+</div>
+
+{% include "script.html.jinja" %}
+{% include "footer.html.jinja" %}

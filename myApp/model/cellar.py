@@ -97,7 +97,7 @@ def get_details_work_by_eurovoc_uri(eurovoc_uri, limit=15):
       ?exp cdm:expression_uses_language <http://publications.europa.eu/resource/authority/language/FRA>.
       ?exp cdm:expression_title ?title.
     }}
-    ORDER BY ?eurovoc ?s ?celex
+    ORDER BY DESC(?date_document) 
     LIMIT {limit}
     """
 

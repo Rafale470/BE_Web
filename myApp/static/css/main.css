@@ -3495,6 +3495,7 @@ input, select, textarea {
 
 	#footer .icons {
 		color: #aaaaaa;
+		text-align: center;
 	}
 
 	#footer .copyright {
@@ -3504,6 +3505,7 @@ input, select, textarea {
 		font-weight: 400;
 		letter-spacing: 0.25em;
 		text-transform: uppercase;
+		text-align: center;
 	}
 
 	body.single #footer {

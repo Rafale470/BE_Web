@@ -49,7 +49,7 @@
 									<p><strong>Date de fin de validité :</strong> {{ resultat['dates_ev'] or "Non renseigné" }}</p>
 								{% endif %}
 								{% if resultat['force'] %}
-									<p><strong>En vigueur :</strong> {{ resultat['force'] }}</p>
+									<p><strong>En vigueur :</strong> {{ "Oui" if resultat['force'] else "Non" }}</p>
 								{% endif %}
 							</div>
 						</article>

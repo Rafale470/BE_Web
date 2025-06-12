@@ -134,7 +134,7 @@ def view2(app) :
                 search=search
             )
         else : 
-            return redirect("/index")
+            return redirect("/")
             
     @app.route('/preferences', methods=['GET', 'POST'])
     def preferences():

@@ -15,7 +15,7 @@
 
 			<!-- Main -->
 			<div id="main">
-				<h1 class="main-title">Feed d'actualités récentes</h1>
+				<h1 class="main-title">Feed d'actualités récentes sur l'aviation civile</h1>
 
 				<div class="preferences-button">
 					<a href="/search_cellar" class="button">Effectuer une recherche</a>
@@ -62,7 +62,7 @@
 				<div class="pagination-container">
 					<div class="pagination-buttons">
 						{% if page > 1 %}
-							<a class="button" href="{{ url_for('feed') }}?page={{ page - 1 }}">← Précédent</a>
+							<a class="button" href="{{ url_for('index') }}?page={{ page - 1 }}">← Précédent</a>
 						{% else %}
 							<div class="button empty-button"></div>
 						{% endif %}
@@ -70,7 +70,7 @@
 						<span class="pagination-page">Page {{ page }}</span>
 
 						{% if (page * per_page) < total %}
-							<a class="button" href="{{ url_for('feed') }}?page={{ page + 1 }}">Suivant →</a>
+							<a class="button" href="{{ url_for('index') }}?page={{ page + 1 }}">Suivant →</a>
 						{% else %}
 							<div class="button empty-button"></div>
 						{% endif %}

@@ -100,8 +100,8 @@ def search_cellar():
         works=works
     )
 
-@app.route('/recherche')
-def recherche(): 
+@app.route('/feed')
+def feed(): 
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
@@ -117,7 +117,7 @@ def recherche():
     end = start + per_page
     resultats = resultats[start:end]
 
-    return render_template("resultats.html.jinja",
+    return render_template("feed.html.jinja",
                            resultats=resultats,
                            page=page,
                            total=total,

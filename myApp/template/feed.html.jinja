@@ -50,7 +50,7 @@
 <div class="pagination-container">
     <div class="pagination-buttons">
         {% if page > 1 %}
-            <a class="button" href="{{ url_for('recherche') }}?page={{ page - 1 }}">← Précédent</a>
+            <a class="button" href="{{ url_for('feed') }}?page={{ page - 1 }}">← Précédent</a>
         {% else %}
             <div class="button empty-button"></div>
         {% endif %}
@@ -58,7 +58,7 @@
         <span class="pagination-page">Page {{ page }}</span>
 
         {% if (page * per_page) < total %}
-            <a class="button" href="{{ url_for('recherche') }}?page={{ page + 1 }}">Suivant →</a>
+            <a class="button" href="{{ url_for('feed') }}?page={{ page + 1 }}">Suivant →</a>
         {% else %}
             <div class="button empty-button"></div>
         {% endif %}

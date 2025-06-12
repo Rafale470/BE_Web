@@ -54,10 +54,10 @@ def view2(app) :
     def test():
         return render_template("index.html.jinja")
 
-    @app.route("/sgbd", methods=['GET', 'POST'])
-    def sgbd():
+    @app.route("/gestion_admin", methods=['GET', 'POST'])
+    def gestion_admin():
         if session.get("privilege") != "admin":
-            return redirect("/index")
+            return redirect("/")
         if request.method == 'POST':
             user_id  = request.form['user_id']
             if 'delete_pref' in request.form:
@@ -72,7 +72,7 @@ def view2(app) :
                 delete_user_favori(user_id, request.form['cellar_id'])
                 session["infoVert"] = "Favori supprimé"
 
-            return redirect(url_for('sgbd'))
+            return redirect(url_for('gestion_admin'))
 
         users        = get_membresData()
         prefs_by_id  = get_prefs_by_user()     
@@ -80,7 +80,7 @@ def view2(app) :
         all_themes   = get_all_themes()
 
         return render_template(
-            "sgbd.html.jinja",
+            "gestion_admin.html.jinja",
             liste=users,
             preferences_by_user=prefs_by_id,
             favoris_by_user=fav_by_id,          
@@ -96,8 +96,8 @@ def view2(app) :
             session["infoRouge"] = "Problème suppression utilisateur"
         return redirect("/sgbd")
 
-    @app.route('/gestion_reglementation', methods=['GET', 'POST'])
-    def gestion_reglementation():
+    @app.route('/gestion_themes', methods=['GET', 'POST'])
+    def gestion_themes():
         if session.get("privilege") == "admin" :
             message  = session.pop('message', None)
             category = session.pop('category', None)
@@ -111,7 +111,7 @@ def view2(app) :
                     delete_theme(request.form['theme_id'])
                     session['message']  = "Le thème a bien été supprimé."
                     session['category'] = 'success'
-                    return redirect(url_for('gestion_reglementation'))
+                    return redirect(url_for('gestion_themes'))
 
                 elif 'add' in request.form:
                     label = request.form['eurovoc'].strip()
@@ -123,11 +123,11 @@ def view2(app) :
                     add_theme(label, eurvoc_id)
                     session['message']  = f"Thème « {label} » ajouté (ID {eurvoc_id})."
                     session['category'] = 'success'
-                    return redirect(url_for('gestion_reglementation'))
+                    return redirect(url_for('gestion_themes'))
 
             themes = get_themes(search)
             return render_template(
-                'gestion_reglementation.html.jinja',
+                'gestion_themes.html.jinja',
                 themes=themes,
                 message=message,
                 category=category,
@@ -136,8 +136,8 @@ def view2(app) :
         else : 
             return redirect("/index")
             
-    @app.route('/gestion_user_reglementation', methods=['GET', 'POST'])
-    def gestion_user_reglementation():
+    @app.route('/preferences', methods=['GET', 'POST'])
+    def preferences():
         user_id = session.get('user_id')
         if not user_id:
             return redirect(url_for('login'))
@@ -153,19 +153,19 @@ def view2(app) :
                 add_user_theme(user_id, theme_id)
                 session['message']  = "Thème ajouté à vos préférences."
                 session['category'] = 'success'
-                return redirect(url_for('gestion_user_reglementation'))
+                return redirect(url_for('preferences'))
 
             elif 'user_delete' in request.form:
                 theme_id = request.form['theme_id']
                 delete_user_theme(user_id, theme_id)
                 session['message']  = "Thème retiré de vos préférences."
                 session['category'] = 'success'
-                return redirect(url_for('gestion_user_reglementation'))
+                return redirect(url_for('preferences'))
         themes           = get_themes(search)            
         user_theme_ids   = set(get_user_theme_ids(user_id))
 
         return render_template(
-            'gestion_user_reglementation.html.jinja',
+            'preferences.html.jinja',
             themes=themes,
             user_theme_ids=user_theme_ids,
             message=message,

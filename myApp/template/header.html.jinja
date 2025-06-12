@@ -2,12 +2,12 @@
     <h1><a href="/">Alerte Réglementation</a></h1>
     <nav class="links">
         <ul>
-            <li><a href="/mon_compte">Ma page</a></li>
-            <li><a href="/gestion_user_reglementation">Préférences</a></li>
-            <li><a href="/recherche">Mon feed</a></li>
+            <li><a href="/mon_compte">Mon compte</a></li>
+            <li><a href="/preferences">Préférences</a></li>
+            <li><a href="/feed">Mon feed</a></li>
             {% if session["privilege"] == "admin" %}
-            <li><a href="/sgbd">Gestion admin</a></li>
-            <li><a href="/gestion_reglementation">Gestion thèmes</a></li>
+            <li><a href="/gestion_admin">Gestion admin</a></li>
+            <li><a href="/gestion_themes">Gestion thèmes</a></li>
             {% endif %}
             <li><a href="A_propos">A propos</a></li>
         </ul>

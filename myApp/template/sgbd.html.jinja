@@ -2,92 +2,98 @@
 {% include "header.html.jinja" %}
 {% include("menu.html.jinja") %}
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Supp</th>
-      <th>Nom</th>
-      <th>Prénom</th>
-      <th>Mail</th>
-      <th>Login</th>
-      <th>Statut</th>
-      <th>Préférences</th>         
-      <th>Ajouter préférence</th>
-      <th>Favoris</th>   
-    </tr>
-  </thead>
+<div class="add-theme-wrapper wide">
+  <h2 class="section-title">Gestion des membres</h2>
 
-  <tbody>
-  {% for user in liste %}
-    <tr>
-      <td><a href="/suppMembre/{{ user.user_id }}"><i class="fa-solid fa-trash-can text-danger"></i></a></td>
-      <td>{{ user.nom }}</td>
-      <td>{{ user.prenom }}</td>
-      <td>{{ user.email }}</td>
-      <td>{{ user.username }}</td>
-      <td>{{ 'Administrateur' if user.privilege == 'admin' else 'Utilisateur' }}</td>
-      <td>
-        {% set prefs = preferences_by_user.get(user.user_id, []) %}
-        {% if prefs %}
-          <form method="post" class="d-flex align-items-center">
-            <input type="hidden" name="user_id" value="{{ user.user_id }}">
-            <select name="theme_id" class="form-select me-2" style="max-width:220px;">
-              {% for p in prefs %}
-                <option value="{{ p.theme_id }}">{{ p.nom }}</option>
-              {% endfor %}
-            </select>
-            <button type="submit" name="delete_pref" class="btn btn-link p-0"
-                    title="Supprimer" onclick="return confirm('Supprimer ?');">
+  <div class="theme-table-wrapper">
+    <table class="theme-table small-text">
+      <thead>
+        <tr>
+          <th>Supp</th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Mail</th>
+          <th>Login</th>
+          <th>Statut</th>
+          <th>Préférences</th>         
+          <th>Ajouter préférence</th>
+          <th>Favoris</th>   
+        </tr>
+      </thead>
+
+      <tbody>
+      {% for user in liste %}
+        <tr>
+          <td>
+            <a href="/suppMembre/{{ user.user_id }}">
               <i class="fa-solid fa-trash-can text-danger"></i>
-            </button>
-          </form>
-        {% else %}
-          <em>Aucune</em>
-        {% endif %}
-      </td>
-      <td>
-        <form method="post" class="d-flex align-items-center">
-          <input type="hidden" name="user_id" value="{{ user.user_id }}">
-          <select name="theme_id" class="form-select me-2" style="max-width:220px;">
-            {% for t in all_themes if t not in preferences_by_user.get(user.user_id,[])%}
-              <option value="{{ t.theme_id }}">{{ t.nom }}</option>
-            {% endfor %}
-          </select>
-          <button type="submit" name="add_pref" class="btn btn-link p-0" title="Ajouter">
-            <i class="fa fa-plus"></i>
-          </button>
-        </form>
-      </td>
-      <td>
-        {% set favs = favoris_by_user.get(user.user_id, []) %}
-        {% if favs %}
-          <form method="post" class="d-flex align-items-center">
-            <input type="hidden" name="user_id" value="{{ user.user_id }}">
+            </a>
+          </td>
+          <td>{{ user.nom }}</td>
+          <td>{{ user.prenom }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ 'Administrateur' if user.privilege == 'admin' else 'Utilisateur' }}</td>
+          
+          <td>
+            {% set prefs = preferences_by_user.get(user.user_id, []) %}
+            {% if prefs %}
+              <form method="post" class="d-flex align-items-center">
+    <input type="hidden" name="user_id" value="{{ user.user_id }}">
+    <select name="theme_id" class="compact-select">
+      {% for p in prefs %}
+        <option value="{{ p.theme_id }}">{{ p.nom }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" name="delete_pref" class="inline-icon-button"
+            title="Supprimer" onclick="return confirm('Supprimer ?');">
+      <i class="fa-solid fa-trash-can text-danger"></i>
+    </button>
+  </form>
+            {% else %}
+              <em>Aucune</em>
+            {% endif %}
+          </td>
 
-            <select name="cellar_id"
-                    class="form-select me-2"
-                    style="max-width:220px;">
-              {% for f in favs %}
-                <option value="{{ f.cellar_id }}">{{ f.nom }}</option>
-              {% endfor %}
-            </select>
+          <td>
+            <form method="post" class="d-flex align-items-center">
+  <input type="hidden" name="user_id" value="{{ user.user_id }}">
+  <select name="theme_id" class="compact-select">
+    {% for t in all_themes if t not in preferences_by_user.get(user.user_id,[]) %}
+      <option value="{{ t.theme_id }}">{{ t.nom }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" name="add_pref" class="inline-icon-button" title="Ajouter">
+    <i class="fa fa-plus"></i>
+  </button>
+</form>
+          </td>
 
-            <button type="submit" name="delete_fav"
-                    class="btn btn-link p-0"
-                    title="Supprimer ce favori"
-                    onclick="return confirm('Supprimer ce favori ?');">
-              <i class="fa-solid fa-trash-can text-danger"></i>
-            </button>
-          </form>
-        {% else %}
-          <em>Aucun</em>
-        {% endif %}
-      </td>
+          <td>
+            {% set favs = favoris_by_user.get(user.user_id, []) %}
+            {% if favs %}
+              <form method="post" class="form-row tight">
+                <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                <select name="cellar_id" class="form-select compact">
+                  {% for f in favs %}
+                    <option value="{{ f.cellar_id }}">{{ f.nom }}</option>
+                  {% endfor %}
+                </select>
+                <button type="submit" name="delete_fav" class="icon-button" title="Supprimer ce favori" onclick="return confirm('Supprimer ce favori ?');">
+                  <i class="fa-solid fa-trash-can text-danger"></i>
+                </button>
+              </form>
+            {% else %}
+              <em>Aucun</em>
+            {% endif %}
+          </td>
 
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 
 {% include "script.html.jinja" %}
 {% include("footer.html.jinja") %}

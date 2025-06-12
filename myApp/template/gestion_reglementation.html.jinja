@@ -2,9 +2,9 @@
 {% include "header.html.jinja" %}
 {% include("menu.html.jinja") %}
 
-<div class="container mt-5">
+<div class="container mt-5 theme-manager">
 
-  <h1>Gestion des thèmes réglementaires</h1>
+  <h1 class="main-title">Gestion des thèmes réglementaires</h1>
 
   {% if message %}
     <div class="alert alert-{{ category }}">
@@ -12,77 +12,81 @@
     </div>
   {% endif %}
 
-  <form method="post" class="mb-4 d-flex align-items-center">
+  <!-- Formulaire de recherche -->
+  <form method="post" class="filter-form">
     <input
       type="text"
       name="search_term"
       placeholder="Rechercher un thème…"
       value="{{ search or '' }}"
-      class="form-control me-2"
-      style="max-width:300px;"
+      class="search-input"
     >
-    <button type="submit" name="search" class="btn btn-primary">Filtrer</button>
+    <button type="submit" name="search" class="filter-button">
+      Filtrer
+    </button>
   </form>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Supp</th>
-        <th>Nom</th>
-        <th>Eurvoc</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% if themes %}
-        {% for theme in themes %}
-          <tr>
-            <td>
-              <form method="post" class="d-inline">
-                <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
-                <button
-                  type="submit"
-                  name="delete"
-                  class="btn btn-link p-0"
-                  onclick="return confirm('Supprimer ce thème ?');"
-                >
-                  <i class="fa-solid fa-trash-can text-danger"></i>
-                </button>
-              </form>
-            </td>
-            <td>{{ theme.nom }}</td>
-            <td>{{ theme.eurvoc_name }}</td>
-          </tr>
-        {% endfor %}
-      {% else %}
+  <!-- Tableau -->
+  <div class="table-wrapper">
+    <table class="styled-table">
+      <thead>
         <tr>
-          <td colspan="3">Aucun thème trouvé.</td>
+          <th style="width: 80px;">Supp</th>
+          <th>Nom</th>
+          <th>Eurovoc</th>
         </tr>
-      {% endif %}
-    </tbody>
-  </table>
-
-
-<h2>Ajouter un thème depuis Eurovoc</h2>
-<form method="post" class="position-relative" style="max-width:400px;">
-  <label for="eurovoc">Thème Eurovoc :</label>
-  <input type="text"
-         id="eurovoc"
-         name="eurovoc"          {# ← label du thème #}
-         autocomplete="off"
-         required
-         class="form-control">
-  <input type="hidden"
-         id="eurovoc_uri"
-         name="eurovoc_uri">    
-
-  <div id="suggestions"
-       style="border:1px solid #ccc; display:none;
-              position:absolute; background:white; z-index:10;
-              max-height:200px; overflow-y:auto; width:100%;">
+      </thead>
+      <tbody>
+        {% if themes %}
+          {% for theme in themes %}
+            <tr>
+              <td>
+                <form method="post" class="d-inline">
+                  <input type="hidden" name="theme_id" value="{{ theme.theme_id }}">
+                  <button
+                    type="submit"
+                    name="delete"
+                    class="icon-button delete-button"
+                    onclick="return confirm('Supprimer ce thème ?');"
+                  >
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </form>
+              </td>
+              <td class="theme-name">{{ theme.nom }}</td>
+              <td>{{ theme.eurvoc_name }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="3">Aucun thème trouvé.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
   </div>
 
-  <button type="submit" name="add" class="btn btn-success mt-2">Ajouter</button>
-</form>
+  <div class="add-theme-wrapper">
+  <h2 class="section-title">Ajouter un thème depuis Eurovoc</h2>
+
+  <form method="post" class="add-theme-form">
+    <label for="eurovoc" class="form-label">Thème Eurovoc :</label>
+    <input type="text"
+           id="eurovoc"
+           name="eurovoc"
+           autocomplete="off"
+           required
+           class="form-control search-input">
+
+    <input type="hidden" id="eurovoc_uri" name="eurovoc_uri">
+
+    <div id="suggestions" class="suggestions-box"></div>
+
+    <button type="submit" name="add" class="filter-button mt-4">Ajouter</button>
+  </form>
+</div>
+
+</div>
 
 <script>
   const input       = document.getElementById('eurovoc');

@@ -3715,4 +3715,314 @@ input, select, textarea {
     margin: 2em 0;
 }
 
+.pagination {
+    margin: 30px 0;
+    position: relative;
+}
+
+.pagination-container {
+    margin: 40px 0;
+    text-align: center;
+}
+
+.pagination-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.pagination-page {
+    font-weight: bold;
+    font-size: 1.2em;
+    min-width: 100px;
+}
+
+.empty-button {
+    visibility: hidden;
+    width: 130px;
+    height: 50px;
+}
+
+.main-title {
+    text-align: center;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    font-size: 2em;
+    letter-spacing: 0.05em;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #3c3b3b;
+}
+
+.preferences-button {
+    text-align: center;
+    margin: 2em 0;
+}
+
+.post.compact {
+    border-radius: 12px;
+    margin: 1.5em 2em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(160, 160, 160, 0.3);
+}
+
+.post.compact header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 1.5em 1.5em 1em 1.5em;
+}
+
+.post.compact header .title {
+    flex: 1 1 auto;
+    padding: 0;
+    padding-right: 2em;
+}
+
+.post.compact header .title h2 {
+    font-size: 1.2em;
+    margin-bottom: 0.2em;
+}
+
+.post.compact header .title p {
+    font-size: 0.95em;
+    margin: 0.2em 0;
+    color: #777;
+}
+
+.post.compact header .meta {
+    min-width: 15em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0;
+}
+
+.post.compact header .meta p {
+    font-size: 0.9em;
+    margin: 0.2em 0;
+}
+
+.post.compact .content p {
+    font-size: 0.9em;
+    margin: 0.2em 0;
+}
+
+/* Hauteur modérée des lignes */
+.styled-table tbody tr {
+    height: 60px;
+}
+
+/* Style général des cellules */
+.styled-table td {
+    padding: 0.5em 1em;
+    vertical-align: middle;
+    font-size: 1.2em;
+}
+
+/* Ajustement des colonnes pour équilibrer le tableau */
+.styled-table th:first-child,
+.styled-table td:first-child {
+    width: 80px;
+}
+
+/* Centrage des formulaires dans les cellules actions */
+.styled-table td form {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Taille d'icône plus proportionnée, mais visible */
+.icon-button i {
+    font-size: 1.3em;
+    line-height: 1;
+}
+
+/* Animation au survol pour effet moderne */
+.icon-button:hover i {
+    transform: scale(1.2);
+    transition: transform 0.2s;
+}
+
+/* Couleurs spécifiques pour cohérence esthétique */
+.add-button i {
+    color: #2ebaae;
+}
+
+.delete-button i {
+    color: #e74c3c;
+}
+
+/* Effet d'ombre et coins arrondis pour l'ensemble du tableau */
+.table-wrapper {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Conteneur principal centré et aéré */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Formulaire de filtre : bords arrondis + ombre légère */
+.filter-form {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 2em;
+    margin-bottom: 2em;
+}
+
+/* Input du filtre avec coins arrondis */
+.search-input {
+    border-radius: 8px;
+}
+
+/* Bouton du filtre avec coins arrondis */
+.filter-button {
+    border-radius: 8px;
+}
+
+/* Encapsulation de la table : bords arrondis + ombre */
+.table-wrapper {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* Pour s'assurer que la table ne déborde pas */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.styled-table th {
+    padding: 1em 1.5em;
+    font-size: 1.1em;
+}
+
+.styled-table td:nth-child(2) {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+/* Majuscules pour les noms de thèmes */
+.styled-table td.theme-name {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.add-theme-wrapper {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    margin-top: 40px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+}
+
+.add-theme-form .form-label {
+    font-weight: 500;
+    margin-bottom: 12px;
+    font-size: 1.1rem; /* légèrement agrandi ici */
+    display: block;
+}
+
+.suggestions-box {
+    border: 1px solid #ccc;
+    display: none;
+    position: absolute;
+    background: white;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.05);
+}
+
+.add-theme-wrapper.wide {
+    max-width: 1500px;
+    margin: 40px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.theme-table-wrapper {
+    overflow-x: auto;
+}
+
+.theme-table.small-text th, .theme-table.small-text td {
+    font-size: 1rem;
+    padding: 12px 12px;
+}
+
+.form-row.tight {
+    gap: 6px;
+}
+
+.form-select.compact {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+}
+
+.icon-button {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 20px 20px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-button:hover {
+    background: #f3f3f3;
+}
+
+.compact-select {
+    max-width: 180px;  /* réduit la largeur */
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.inline-icon-button {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 20px 20px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 

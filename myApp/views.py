@@ -14,12 +14,25 @@ app.config.from_object('myApp.config')
 
 @app.route("/")
 def index():
-       params = messageInfo()
-       return render_template("index.html.jinja", **params)
+    params = messageInfo()
+    page = request.args.get('page', 1, type=int)
+    per_page = 5
+    resultats = get_details_work_by_eurovoc_uri(["http://eurovoc.europa.eu/4408"], limit=(page+1)*per_page)
+    resultats = [r for r in resultats if r is not None]
+    for resultat in resultats :
+        eurovocs = get_work_by_uri(resultat['work_uri'])["eurovocs"]
+        resultat['eurovocs'] = eurovocs
+    total = len(resultats)
+    start = (page - 1) * per_page
+    end = start + per_page
+    resultats = resultats[start:end]
+    return render_template("index.html.jinja",
+                           resultats=resultats,
+                           page=page,
+                           total=total,
+                           per_page=per_page,
+                           **params)
 
-@app.route("/index")
-def ind():
-       return redirect(url_for("index"))
 
 @app.route("/A_propos")
 def propos():
@@ -89,13 +102,27 @@ def search_cellar():
 
 @app.route('/recherche')
 def recherche(): 
-    user_id= session.get('user_id')
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
     eurovocs_uri = get_eurvoc_uri_from_uid(user_id)
-    resultats = get_details_work_by_eurovoc_uri(eurovocs_uri)
+    resultats = get_details_work_by_eurovoc_uri(eurovocs_uri, limit=(page+1)*per_page)
     for resultat in resultats :
         eurovocs = get_work_by_uri(resultat['work_uri'])["eurovocs"]
         resultat['eurovocs'] = eurovocs
-    return render_template("resultats.html.jinja", resultats=resultats)
+    total = len(resultats)
+    start = (page - 1) * per_page
+    end = start + per_page
+    resultats = resultats[start:end]
+
+    return render_template("resultats.html.jinja",
+                           resultats=resultats,
+                           page=page,
+                           total=total,
+                           per_page=per_page)
+
 
 @app.route('/document/<string:celex>')
 def eurlex_document(celex):

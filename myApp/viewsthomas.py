@@ -48,7 +48,7 @@ def view2(app) :
         mail = request.form['mail']
         motPasse = motPasse.hexdigest() 
         lastId = add_membreData(identifiant, motPasse, nom, prenom, mail)
-        return redirect("/index")
+        return redirect("/")
 
     @app.route("/test")
     def test():
@@ -94,7 +94,7 @@ def view2(app) :
             session["infoVert"]="L'utilisateur a bien été supprimé"
         else:
             session["infoRouge"] = "Problème suppression utilisateur"
-        return redirect("/sgbd")
+        return redirect("/gestion_admin")
 
     @app.route('/gestion_themes', methods=['GET', 'POST'])
     def gestion_themes():

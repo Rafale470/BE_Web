@@ -1,4 +1,5 @@
 from flask import session
+
 # passe les messages d'info en paramètres
 def messageInfo(params = None):
     if params is None:
@@ -18,3 +19,4 @@ def messageInfo(params = None):
         params["errorDB"] = session['errorDB']
         session.pop("errorDB", None)
     return params
+

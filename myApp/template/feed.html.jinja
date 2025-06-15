@@ -1,3 +1,4 @@
+{% include("info.html.jinja") %}
 {% include "head.html.jinja" %}
 {% include "header.html.jinja" %}
 {% include "menu.html.jinja" %}
@@ -40,7 +41,28 @@
             <p><strong>En vigueur :</strong> {{ "Oui" if resultat['force'] else "Non" }}</p>
         {% endif %}
     </div>
+
+    <hr>
+
+    {% if resultat['favori_existe'] %}
+    <div class="favori-existant">
+        <p>Déjà dans vos favoris sous le nom : <strong>{{ resultat['nom_favori'] }}</strong></p>
+        <form action="{{ url_for('supprimer_favori') }}" method="POST" style="margin: 0;">
+            <input type="hidden" name="celex" value="{{ resultat['celex'] }}">
+            <button type="submit" class="button danger-button">Supprimer</button>
+        </form>
+    </div>
+{% else %}
+    <div class="favorites">
+        <form action="{{ url_for('ajouter_favori') }}" method="POST">
+            <input type="hidden" name="celex" value="{{ resultat['celex'] }}">
+            <input type="text" name="nom_favori" placeholder="Nom du favori" required>
+            <button type="submit" class="button">Ajouter aux favoris</button>
+        </form>
+    </div>
+{% endif %}
 </article>
+
         {% endfor %}
     {% else %}
         <p>Aucun résultat trouvé.</p>

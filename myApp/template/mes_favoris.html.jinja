@@ -1,0 +1,27 @@
+{% extends "base.html.jinja" %}
+
+{% block content %}
+<h1>Mes Favoris</h1>
+
+{% if favoris %}
+    <ul class="favoris-list">
+    {% for favori in favoris %}
+        <li class="favori-item">
+            <div>
+                <strong>{{ favori.nom }}</strong> (CELEX : {{ favori.celex }})
+            </div>
+            <div>
+                <a href="{{ url_for('eurlex_document', celex=favori.celex) }}" class="button">Voir le document</a>
+                <form action="{{ url_for('supprimer_favori') }}" method="POST" style="display:inline;">
+    <input type="hidden" name="celex" value="{{ favori.celex }}">
+    <button type="submit" class="button button-danger">Supprimer</button>
+</form>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Vous n'avez encore aucun favori enregistré.</p>
+{% endif %}
+
+{% endblock %}

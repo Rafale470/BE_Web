@@ -4027,4 +4027,27 @@ input, select, textarea {
     justify-content: center;
 }
 
+.favoris-list {
+    list-style: none;
+    padding: 0;
+}
 
+.favori-item {
+    margin: 10px 0;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button-danger {
+    background-color: #e74c3c;
+    color: white;
+    border: 1px solid #e74c3c;
+}
+
+.button-danger:hover {
+    background-color: #c0392b;
+}

@@ -13,14 +13,41 @@
   {% if works is defined %}
     <h3>Textes associés au thème sélectionné :</h3>
     {% if works %}
-      <ul>
-        {% for work in works %}
-          <li>
-            <a href="{{ work.psi }}" target="_blank">{{ work.title }}</a>
-            {% if work.date %} ({{ work.date }}){% endif %}
-          </li>
-        {% endfor %}
-      </ul>
+      {% for work in works %}
+        <article class="post compact">
+          <header>
+            <div class="title">
+              <h2>
+                {% if work.celex %}
+                  <a href="{{ url_for('eurlex_document', celex=work.celex.split(';')[0]) }}">
+                    {{ work.title or "Sans titre" }}
+                  </a>
+                {% else %}
+                  {{ work.title or "Sans titre" }}
+                {% endif %}
+              </h2>
+              <p>Descripteur : {{ work.eurovocs or "Non renseigné" }}</p>
+            </div>
+            <div class="meta">
+              <p><strong>Date :</strong> {{ work.date_document or work.date or "Non renseigné" }}</p>
+              <p><strong>Forme :</strong> {{ work.type or "Non renseigné" }}</p>
+            </div>
+          </header>
+          <div class="content">
+            <p><strong>Numéro CELEX :</strong> {{ work.celex or "Non renseigné" }}</p>
+            {% if work.dates_if %}
+            <p><strong>Date de prise d'effet :</strong> {{ work.dates_if or "Non renseigné" }}</p>
+            {% endif %}
+            {% if work.dates_ev %}
+            <p><strong>Date de fin de validité :</strong> {{ work.dates_ev or "Non renseigné" }}</p>
+            {% endif %}
+            {% if work.force %}
+              <p><strong>En vigueur :</strong> {{ "Oui" if work.force == "true" else "Non" }}</p>
+            {% endif %}
+          </div>
+          <hr>
+        </article>
+      {% endfor %}
     {% else %}
       <p>Aucun texte trouvé pour ce thème.</p>
     {% endif %}

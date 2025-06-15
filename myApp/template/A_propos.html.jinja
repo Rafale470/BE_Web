@@ -1,41 +1,34 @@
-<!DOCTYPE HTML>
-{% include("info.html.jinja") %}
-<html>
-	{% include("head.html.jinja") %}
-	<body class="is-preload">
-	<div>
-	<a href="static/document/CV_Mathias_Robert.pdf" target="_blank" >
-    CV de Mathias Robert
-  </a>
-	</div>
-	<div>
-	<a href="static/document/CV_Adrien_Sourbets.pdf" target="_blank" >
-    CV d'Adrien Sourbets
-	</div>
-  </a>
-  <div>
-	</div>
-	<a href="static/document/CV_Thomas_Zahnd.pdf" target="_blank" >
-    CV de Thomas Zahnd
-  </a>
-  <div>
-	<a href="static/document/CV_Etienne_Vidal.pdf" target="_blank" >
-    CV d'Étienne Vidal
-  </a>
-	</div>
+{% extends "base.html.jinja" %}
 
-		<!-- Wrapper -->
-			<div id="wrapper">
+{% block content %}
+<div id="main" style="max-width: 800px; margin: 0 auto; padding: 2em 1em;">
+    <h2>À propos du projet</h2>
+    <p>
+        Ce projet web est réalisé par <strong>Mathias Robert</strong>, <strong>Adrien Sourbets</strong>, <strong>Thomas Zahnd</strong> et <strong>Étienne Vidal</strong>. Il permet de créer un compte et de vous abonner à différents thèmes réglementaires pour rester au courant des dernières actualités. Ce site s'appuie essentiellement sur les textes publiés par l'EASA.
+    </p>
 
-				<!-- Header -->
-				{% include("header.html.jinja") %}
-
-				<!-- Menu -->
-				{% include("menu.html.jinja") %}
-
-				<!--Main--> 
-				<p>Ce projet web est réalisé par Mathias Robert, Adrien Sourbet, Thomas Zahnd et Etienne Vidal, il permet de créer un compte et de vous abonner à différents thèmes règlementaire pour reste au courant des dernières actualités. Ce site s'appuie essentiellement des textes publiés par l'EASA.</p>
-
-			</div>
-				{% include("script.html.jinja") %}
-				{% include "footer.html.jinja" %}
+    <h3>CV des membres du projet</h3>
+    <ul style="list-style: none; padding: 0;">
+        <li style="margin-bottom: 10px;">
+            <a href="{{ url_for('static', filename='document/CV_Mathias_Robert.pdf') }}" target="_blank" class="button">
+                CV de Mathias Robert
+            </a>
+        </li>
+        <li style="margin-bottom: 10px;">
+            <a href="{{ url_for('static', filename='document/CV_Adrien_Sourbets.pdf') }}" target="_blank" class="button">
+                CV d'Adrien Sourbets
+            </a>
+        </li>
+        <li style="margin-bottom: 10px;">
+            <a href="{{ url_for('static', filename='document/CV_Thomas_Zahnd.pdf') }}" target="_blank" class="button">
+                CV de Thomas Zahnd
+            </a>
+        </li>
+        <li style="margin-bottom: 10px;">
+            <a href="{{ url_for('static', filename='document/CV_Etienne_Vidal.pdf') }}" target="_blank" class="button">
+                CV d'Étienne Vidal
+            </a>
+        </li>
+    </ul>
+</div>
+{% endblock %}

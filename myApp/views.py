@@ -84,14 +84,23 @@ def search_cellar():
     eurovoc_uri = request.args.get('eurovoc_uri', '')
     works = None
 
-    # Suggestions pour le champ (optionnel, utile si tu veux pré-remplir)
     eurovoc_suggestions = get_eurovoc_themes(eurovoc_label) if eurovoc_label else {}
 
-    # Si un thème a été choisi (URI présente), on cherche les textes associés
+    user_id = session.get('user_id')
     if eurovoc_uri:
-       print(f"Recherche des textes pour l'URI Eurovoc: {eurovoc_uri}")
-       works = get_works_by_eurovoc_uri(eurovoc_uri)
-       print(f"Nombre de textes trouvés: {len(works) if works else 0}")
+        works = get_details_work_by_eurovoc_uri([eurovoc_uri])
+        for work in works:
+            eurovocs = get_work_by_uri(work['work_uri'])["eurovocs"]
+            work['eurovocs'] = eurovocs
+
+            # Ajout du statut favori si l'utilisateur est connecté
+            if user_id:
+                favori = get_favorite_by_user_and_celex(user_id, work['celex'])
+                if favori:
+                    work['favori_existe'] = True
+                    work['nom_favori'] = favori[0]
+                else:
+                    work['favori_existe'] = False
 
     return render_template(
         'search.html.jinja',

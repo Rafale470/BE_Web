@@ -2,11 +2,75 @@
 
 
     <!-- Search -->
+    <!-- Search should use autocomplete and redirect to search page -->
         <section>
-            <form class="search" method="get" action="#">
-                <input type="text" name="query" placeholder="Search" />
+            <form class="search" method="get" action="{{ url_for('search_cellar') }}" onsubmit="return submitMenuSearch();">
+                <input type="text" id="menu_eurovoc" name="eurovoc" placeholder="Recherche Eurovoc..." autocomplete="off" required>
+                <input type="hidden" id="menu_eurovoc_uri" name="eurovoc_uri">
+                <div id="menu_suggestions" style="border:1px solid #ccc; display:none; position:absolute; background:white; z-index:10;"></div>
+                <button type="submit" style="margin-top:5px;">Rechercher</button>
             </form>
+            <script>
+            const menuInput = document.getElementById('menu_eurovoc');
+            const menuSuggestions = document.getElementById('menu_suggestions');
+            const menuHiddenUri = document.getElementById('menu_eurovoc_uri');
+
+
+            menuInput.addEventListener('input', function() {
+            const q = menuInput.value;
+            if (q.length < 2) {
+                menuSuggestions.style.display = 'none';
+                return;
+            }
+            fetch('/ajax/eurovoc_suggest?q=' + encodeURIComponent(q))
+                .then(r => r.json())
+                .then(data => {
+                menuSuggestions.innerHTML = '';
+                if (data.length === 0) {
+                    menuSuggestions.style.display = 'none';
+                    return;
+                }
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.textContent = item.label;
+                    div.style.cursor = 'pointer';
+                    div.onclick = () => {
+                    menuInput.value = item.label;
+                    menuHiddenUri.value = item.uri;
+                    menuSuggestions.style.display = 'none';
+                    };
+                    menuSuggestions.appendChild(div);
+                });
+                menuSuggestions.style.display = 'block';
+                });
+            });
+
+            // Cacher les suggestions si on clique ailleurs
+            document.addEventListener('click', function(e) {
+            if (!menuSuggestions.contains(e.target) && e.target !== menuInput) {
+                menuSuggestions.style.display = 'none';
+            }
+            });
+
+            // Empêche la soumission si aucun eurovoc_uri n'est sélectionné
+            function submitMenuSearch() {
+            const label = menuInput.value;
+            const uri = menuHiddenUri.value;
+            if (!uri) {
+                alert("Veuillez sélectionner un thème Eurovoc dans la liste.");
+                return false;
+            }
+            // Construction manuelle de l'URL pour éviter les problèmes d'encodage
+            const params = new URLSearchParams({
+                eurovoc: label,
+                eurovoc_uri: uri
+            });
+            window.location.href = "{{ url_for('search_cellar') }}?" + params.toString();
+            return false; // Empêche la soumission classique du formulaire
+            }
+        </script>
         </section>
+        
 
     <!-- Links -->
     
